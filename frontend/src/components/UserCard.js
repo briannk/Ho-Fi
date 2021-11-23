@@ -18,7 +18,7 @@ const UserCard = () => {
   };
   return (
     <div className={`${userCardStyles}`} id="user-card">
-      {user ? (
+      {user && user.emailVerified ? (
         <>
           <span>{user.email}</span>
           <Button

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, Form } from "semantic-ui-react";
+import { Button, Form, Message } from "semantic-ui-react";
 import { useAuthContext } from "../contexts/AuthContext";
 
 const LogIn = () => {
@@ -12,8 +12,9 @@ const LogIn = () => {
     email: false,
     pw: false,
   });
+  const [message, setMessage] = useState(false);
 
-  const { logIn } = useAuthContext();
+  const { user, logIn, signOut, isVerified, verifyEmail } = useAuthContext();
 
   const containerStyles = `container mx-auto max-w-sm border-4
      rounded m-4 p-4`;
@@ -39,6 +40,29 @@ const LogIn = () => {
       //submit
       console.log("success");
       const resp = await logIn(userInfo.email, userInfo.pw);
+      if (!isVerified) {
+        setMessage(
+          <Message
+            content={
+              <>
+                <p>
+                  E-mail must be verified in order to login. Please check your
+                  inbox or resend the verification.
+                </p>
+                <Button
+                  size="mini"
+                  // className="mt-1"
+                  onClick={async () => await verifyEmail(user)}
+                >
+                  Resend Link
+                </Button>
+              </>
+            }
+          />
+        );
+      } else {
+        setMessage(<Message content="Login successful!" />);
+      }
       console.log(resp);
     }
   };
@@ -61,6 +85,7 @@ const LogIn = () => {
 
   return (
     <div className={containerStyles}>
+      {message}
       {/* replace h3 with custom section component including image */}
       <h3>Log in to continue</h3>
       <Form className="my-4">
@@ -89,6 +114,9 @@ const LogIn = () => {
           value={userInfo.pw}
           onChange={handleInputChange}
         />
+        <Link to="/resetpassword" className="block mb-4">
+          Forgot Password?
+        </Link>
         <Form.Button onClick={handleClick}>Log In</Form.Button>
       </Form>
       <span>

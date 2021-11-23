@@ -12,16 +12,16 @@ const AuthProvider = ({ children }) => {
     // initialize with placeholder data maybe?
   });
 
-  const signOut = () => {
-    return auth.signOut();
+  const signOut = async () => {
+    return await auth.signOut();
   };
 
-  const logIn = (email, password) => {
-    return auth.signInWithEmailAndPassword(email, password);
+  const logIn = async (email, password) => {
+    return await auth.signInWithEmailAndPassword(email, password);
   };
 
-  const signUp = (email, password) => {
-    return auth.createUserWithEmailAndPassword(email, password);
+  const signUp = async (email, password) => {
+    return await auth.createUserWithEmailAndPassword(email, password);
   };
 
   const getToken = async () => {
@@ -29,9 +29,24 @@ const AuthProvider = ({ children }) => {
     return await auth.currentUser.getIdToken();
   };
 
+  const verifyEmail = async (user) => {
+    console.log("sending verification");
+    return await user.sendEmailVerification();
+  };
+
+  const sendResetEmail = async (email) => {
+    console.log("sending password reset");
+    return await auth.sendPasswordResetEmail(email);
+  };
+
+  const isLoggedIn = () => {
+    return user && user.emailVerified;
+  };
+
   useEffect(() => {
     const unsub = auth.onAuthStateChanged((user) => {
       setUser(user);
+      // console.log(user.emailVerified);
     });
 
     return unsub;
@@ -39,10 +54,13 @@ const AuthProvider = ({ children }) => {
 
   const providerValue = {
     user,
+    isLoggedIn,
+    verifyEmail,
     logIn,
     signUp,
     getToken,
     signOut,
+    sendResetEmail,
   };
 
   return (
