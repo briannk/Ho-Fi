@@ -34,7 +34,7 @@ const PwReset = () => {
       setMessage(
         <Message content="A reset link has been sent to your e-mail." />
       );
-      // setShowResetForm(true);
+      setShowResetForm(true);
       // setMessage(false);
     }
   };
@@ -46,7 +46,7 @@ const PwReset = () => {
     } else {
       // check code before showing reset form
       try {
-        await verifyCode(userInfo.code);
+        // await verifyCode(userInfo.code);
         setIsValidCode(true);
       } catch (error) {
         // set error message
@@ -69,7 +69,7 @@ const PwReset = () => {
       return;
     } else {
       // reset password
-      const resp = await resetPassword(userInfo.code, userInfo.pw);
+      // const resp = await resetPassword(userInfo.code, userInfo.pw);
       setMessage(<Message content="Password reset successfully." />);
       // console.log(resp);
     }

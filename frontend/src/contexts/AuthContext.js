@@ -9,13 +9,16 @@ const useAuthContext = () => {
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState();
+  const [isLoading, setIsLoading] = useState(true);
 
   const signOut = async () => {
     return await auth.signOut();
   };
 
   const logIn = async (email, password) => {
-    return await auth.signInWithEmailAndPassword(email, password);
+    setIsLoading(true);
+    const resp = await auth.signInWithEmailAndPassword(email, password);
+    return resp;
   };
 
   const signUp = async (email, password) => {
@@ -46,13 +49,12 @@ const AuthProvider = ({ children }) => {
     return await auth.confirmPasswordReset(code, newPw);
   };
 
-  const isLoggedIn = () => {
-    return user && user.emailVerified;
-  };
+  const isLoggedIn = user && user.emailVerified;
 
   useEffect(() => {
     const unsub = auth.onAuthStateChanged((user) => {
       setUser(user);
+      setIsLoading(false);
       // console.log(user.emailVerified);
     });
 
@@ -74,7 +76,7 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={providerValue}>
-      {children}
+      {isLoading ? <div>Loading...</div> : children}
     </AuthContext.Provider>
   );
 };

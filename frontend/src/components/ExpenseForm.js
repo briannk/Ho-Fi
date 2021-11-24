@@ -47,7 +47,7 @@ const ExpenseForm = () => {
   };
 
   const handleInputChange = (e) => {
-    if (e.target.value !== "" && inputErrors[e.target.name] === true) {
+    if (e.target.value !== "" && inputErrors[e.target.name]) {
       setInputErrors({ ...inputErrors, [e.target.name]: false });
     }
     if (e.target.type === "number") {

@@ -17,6 +17,7 @@ import { useAuthContext } from "./contexts/AuthContext";
 import "./App.css";
 import ExpenseForm from "./components/ExpenseForm";
 import IncomeForm from "./components/IncomeForm";
+// import Loading from "./components/Loading";
 
 function App() {
   const { user, isLoggedIn } = useAuthContext();
