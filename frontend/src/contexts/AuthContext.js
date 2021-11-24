@@ -8,9 +8,7 @@ const useAuthContext = () => {
 };
 
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState({
-    // initialize with placeholder data maybe?
-  });
+  const [user, setUser] = useState();
 
   const signOut = async () => {
     return await auth.signOut();
@@ -39,6 +37,15 @@ const AuthProvider = ({ children }) => {
     return await auth.sendPasswordResetEmail(email);
   };
 
+  const verifyCode = async (code) => {
+    return await auth.verifyPasswordResetCode(code);
+  };
+
+  const resetPassword = async (code, newPw) => {
+    console.log("resetting password");
+    return await auth.confirmPasswordReset(code, newPw);
+  };
+
   const isLoggedIn = () => {
     return user && user.emailVerified;
   };
@@ -61,6 +68,8 @@ const AuthProvider = ({ children }) => {
     getToken,
     signOut,
     sendResetEmail,
+    verifyCode,
+    resetPassword,
   };
 
   return (

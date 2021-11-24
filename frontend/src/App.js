@@ -15,10 +15,12 @@ import PwReset from "./components/PwReset";
 import { useAuthContext } from "./contexts/AuthContext";
 
 import "./App.css";
+import ExpenseForm from "./components/ExpenseForm";
+import IncomeForm from "./components/IncomeForm";
 
 function App() {
   const { user, isLoggedIn } = useAuthContext();
-  // console.log(isLoggedIn());
+  // console.log(isLoggedIn);
 
   return (
     <Router>
@@ -26,24 +28,32 @@ function App() {
       <Routes>
         <Route
           path="/login"
-          element={isLoggedIn() ? <Navigate to="/dashboard" /> : <LogIn />}
+          element={isLoggedIn ? <Navigate to="/dashboard" /> : <LogIn />}
         />
         <Route
           path="/signup"
-          element={isLoggedIn() ? <Navigate to="/dashboard" /> : <SignUp />}
+          element={isLoggedIn ? <Navigate to="/dashboard" /> : <SignUp />}
         />
         <Route
           path="/resetpassword"
-          element={isLoggedIn() ? <Navigate to="/dashboard" /> : <PwReset />}
+          element={isLoggedIn ? <Navigate to="/dashboard" /> : <PwReset />}
         />
         <Route
           path="/dashboard"
-          element={isLoggedIn() ? <Dashboard /> : <Navigate to="/login" />}
+          element={isLoggedIn ? <Dashboard /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/expenses/add"
+          element={isLoggedIn ? <ExpenseForm /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/income/add"
+          element={isLoggedIn ? <IncomeForm /> : <Navigate to="/login" />}
         />
         <Route
           exact
           path="/"
-          element={isLoggedIn() ? <Navigate to="/dashboard" /> : <Home />}
+          element={isLoggedIn ? <Navigate to="/dashboard" /> : <Home />}
         />
         <Route path="*" element={<Error />}></Route>
       </Routes>

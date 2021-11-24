@@ -37,7 +37,7 @@ const UserCard = () => {
             className={buttonStyles}
             as={Link}
             to="/login"
-          ></Button>
+          />
           <span>Don't have an account?</span>
           <Button
             // inverted
@@ -45,7 +45,7 @@ const UserCard = () => {
             className={buttonStyles}
             as={Link}
             to="/signup"
-          ></Button>
+          />
         </>
       )}
     </div>
