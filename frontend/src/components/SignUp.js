@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Form, Button } from "semantic-ui-react";
+import { Form, Button, Message } from "semantic-ui-react";
 import { useAuthContext } from "../contexts/AuthContext";
 
 const SignUp = () => {
@@ -14,6 +14,8 @@ const SignUp = () => {
     pw: false,
     pw2: false,
   });
+
+  const [message, setMessage] = useState();
 
   const { signUp } = useAuthContext();
 
@@ -48,13 +50,18 @@ const SignUp = () => {
       //submit
       console.log("success");
       const resp = await signUp(userInfo.email, userInfo.pw);
-      // const result = await resp.json();
+      setMessage(
+        <Message
+          color={resp.success ? "green" : "red"}
+          content={resp.message}
+        />
+      );
       console.log(resp);
     }
   };
 
   const handleInputChange = (e) => {
-    if (e.target.value !== "" && inputErrors[e.target.name] === true) {
+    if (e.target.value !== "" && inputErrors[e.target.name]) {
       setInputErrors({ ...inputErrors, [e.target.name]: false });
     }
 
@@ -64,6 +71,7 @@ const SignUp = () => {
 
   return (
     <div className={containerStyles}>
+      {message}
       {/* replace h3 with custom section component including image */}
       <h3>Create an account to get started</h3>
       <Form className="my-4">

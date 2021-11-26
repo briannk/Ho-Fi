@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "semantic-ui-react";
+import { Button, Message } from "semantic-ui-react";
 import { useAuthContext } from "../contexts/AuthContext";
 
 const UserCard = () => {
-  const { user, signOut } = useAuthContext();
+  const { user, isLoggedIn, signOut } = useAuthContext();
+  const [message, setMessage] = useState();
 
   // css styles
   const userCardStyles = `container flex flex-col p-6 mx-auto justify-center items-center 
@@ -13,12 +14,14 @@ const UserCard = () => {
 
   const handleSignOut = async () => {
     console.log("Signing out...");
-    const result = await signOut();
-    console.log(result);
+    const resp = await signOut();
+    setMessage(
+      <Message color={resp.success ? "green" : "red"} content={resp.message} />
+    );
   };
   return (
-    <div className={`${userCardStyles}`} id="user-card">
-      {user && user.emailVerified ? (
+    <div className={userCardStyles} id="user-card">
+      {isLoggedIn ? (
         <>
           <span>{user.email}</span>
           <Button
@@ -32,7 +35,6 @@ const UserCard = () => {
       ) : (
         <>
           <Button
-            // inverted
             content="Log In"
             className={buttonStyles}
             as={Link}
@@ -40,7 +42,6 @@ const UserCard = () => {
           />
           <span>Don't have an account?</span>
           <Button
-            // inverted
             content="Sign Up"
             className={buttonStyles}
             as={Link}

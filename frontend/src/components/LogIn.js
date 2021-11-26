@@ -14,7 +14,7 @@ const LogIn = () => {
   });
   const [message, setMessage] = useState(false);
 
-  const { user, logIn, signOut, isVerified, verifyEmail } = useAuthContext();
+  const { user, logIn, verifyEmail } = useAuthContext();
 
   const containerStyles = `container mx-auto max-w-sm border-4
      rounded m-4 p-4`;
@@ -40,7 +40,8 @@ const LogIn = () => {
       //submit
       console.log("success");
       const resp = await logIn(userInfo.email, userInfo.pw);
-      if (!isVerified) {
+
+      if (user && !user.emailVerified) {
         setMessage(
           <Message
             content={
@@ -61,7 +62,12 @@ const LogIn = () => {
           />
         );
       } else {
-        setMessage(<Message content="Login successful!" />);
+        setMessage(
+          <Message
+            color={resp.success ? "green" : "red"}
+            content={resp.message}
+          />
+        );
       }
       console.log(resp);
     }

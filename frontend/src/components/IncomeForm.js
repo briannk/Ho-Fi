@@ -44,7 +44,7 @@ const IncomeForm = () => {
   };
 
   const handleInputChange = (e, { name, type, value }) => {
-    if (value !== "" && inputErrors[name] === true) {
+    if (value !== "" && inputErrors[name]) {
       setInputErrors({ ...inputErrors, [name]: false });
     }
     if (type === "number") {
