@@ -66,7 +66,8 @@ const AuthProvider = ({ children }) => {
           message = "The email address is invalid. Please try again.";
           break;
         case "auth/weak-password":
-          message = "The password is too weak. Please try again.";
+          message =
+            "The password must be at least 6 characters. Please try again.";
           break;
         default:
           message = "Something went wrong. Please try again later.";

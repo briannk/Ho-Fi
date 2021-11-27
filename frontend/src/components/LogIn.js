@@ -73,19 +73,12 @@ const LogIn = () => {
     }
   };
 
-  // // semantic docs style
-  // const handleInputChange = (e, { name, value }) => {
-  //   setUserInfo({ ...userInfo, [name]: value });
-  //   console.log("userInfo: ", userInfo);
-  // };
-
-  // react docs style
-  const handleInputChange = (e) => {
-    if (e.target.value !== "" && inputErrors[e.target.name] === true) {
-      setInputErrors({ ...inputErrors, [e.target.name]: false });
+  const handleInputChange = (e, { name, value }) => {
+    if (value !== "" && inputErrors[name]) {
+      setInputErrors({ ...inputErrors, [name]: false });
     }
 
-    setUserInfo({ ...userInfo, [e.target.name]: e.target.value });
+    setUserInfo({ ...userInfo, [name]: value });
     console.log("userInfo: ", userInfo);
   };
 

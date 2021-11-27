@@ -36,13 +36,13 @@ const SignUp = () => {
       }
       console.log(inputErrors);
       if (userInfo.pw === "") {
-        setInputErrors((prevState) => {
-          return { ...prevState, pw: true };
+        setInputErrors((prev) => {
+          return { ...prev, pw: true };
         });
       }
       if (userInfo.pw !== userInfo.pw2) {
-        setInputErrors((prevState) => {
-          return { ...prevState, pw2: true };
+        setInputErrors((prev) => {
+          return { ...prev, pw2: true };
         });
       }
       return;
@@ -60,12 +60,15 @@ const SignUp = () => {
     }
   };
 
-  const handleInputChange = (e) => {
-    if (e.target.value !== "" && inputErrors[e.target.name]) {
-      setInputErrors({ ...inputErrors, [e.target.name]: false });
+  const handleInputChange = (e, { name, value }) => {
+    if (value !== "" && inputErrors[name]) {
+      setInputErrors((prev) => {
+        return { ...prev, [name]: false };
+      });
     }
-
-    setUserInfo({ ...userInfo, [e.target.name]: e.target.value });
+    setUserInfo((prev) => {
+      return { ...prev, [name]: value };
+    });
     console.log("userInfo: ", userInfo);
   };
 
@@ -94,7 +97,12 @@ const SignUp = () => {
           placeholder="Enter a password"
           error={
             inputErrors.pw
-              ? { content: "Please enter a password.", pointing: "above" }
+              ? userInfo.pw.length < 6
+                ? {
+                    content: "Password must be at least 6 characters.",
+                    pointing: "above",
+                  }
+                : { content: "Please enter a password.", pointing: "above" }
               : null
           }
           value={userInfo.pw}
