@@ -6,11 +6,14 @@ import reportWebVitals from "./reportWebVitals";
 import "semantic-ui-css/semantic.min.css";
 
 import AuthProvider from "./contexts/AuthContext";
+import DataProvider from "./contexts/DataContext";
 
 ReactDOM.render(
   <React.StrictMode>
     <AuthProvider>
-      <App />
+      <DataProvider>
+        <App />
+      </DataProvider>
     </AuthProvider>
   </React.StrictMode>,
   document.getElementById("root")

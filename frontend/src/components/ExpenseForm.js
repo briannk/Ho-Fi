@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Form, Message, Icon } from "semantic-ui-react";
+import { useDataContext } from "../contexts/DataContext";
 
-const ExpenseForm = () => {
+const ExpenseForm = ({ id }) => {
+  const { expensesData } = useDataContext();
+
   const [expense, setExpense] = useState({
     vendor: "",
     total: "",
@@ -17,7 +20,7 @@ const ExpenseForm = () => {
     category: false,
   });
 
-  const containerStyles = `container mx-auto max-w-sm border-4
+  const containerStyles = `mx-auto max-w-sm border-4
      rounded m-4 p-4`;
 
   const handleClick = async () => {
@@ -46,21 +49,30 @@ const ExpenseForm = () => {
     }
   };
 
-  const handleInputChange = (e) => {
-    if (e.target.value !== "" && inputErrors[e.target.name]) {
-      setInputErrors({ ...inputErrors, [e.target.name]: false });
+  const handleInputChange = (e, { name, value, type }) => {
+    console.log(name, value, type);
+    if (value !== "" && inputErrors[name]) {
+      setInputErrors({ ...inputErrors, [name]: false });
     }
-    if (e.target.type === "number") {
+    if (type === "number") {
       setExpense({
         ...expense,
-        [e.target.name]: Math.round(e.target.value * 100) / 100,
+        [name]: Math.round(Number(value) * 100) / 100,
       });
     } else {
-      setExpense({ ...expense, [e.target.name]: e.target.value });
+      setExpense({ ...expense, [name]: value });
     }
-
-    console.log("expense: ", expense);
   };
+
+  useEffect(() => {
+    console.log(id);
+    if (id) {
+      const targetExpense = expensesData.data.find(
+        (expense) => expense.id === id
+      );
+      setExpense({ ...expense, ...targetExpense });
+    }
+  }, []);
 
   return (
     <div className={containerStyles}>
@@ -92,7 +104,7 @@ const ExpenseForm = () => {
               ? { content: "Please enter an amount", pointing: "above" }
               : null
           }
-          value={expense.total}
+          value={expense.total && expense.total.toFixed(2)}
           onChange={handleInputChange}
         />
         <Form.Input
@@ -160,7 +172,9 @@ const ExpenseForm = () => {
           value={userInfo.pw2}
           onChange={handleInputChange}
         /> */}
-        <Form.Button onClick={handleClick}>Add Expense</Form.Button>
+        <Form.Button onClick={handleClick}>
+          {id ? "Edit Expense" : "Add Expense"}
+        </Form.Button>
       </Form>
     </div>
   );

@@ -12,7 +12,7 @@ code {
     monospace;
 } */
 * {
-  border-style: dashed;
+  box-sizing: border-box;
 }
 
 #user-card a {
