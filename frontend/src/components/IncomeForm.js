@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form } from "semantic-ui-react";
+import { useDataContext } from "../contexts/DataContext";
 
-const IncomeForm = () => {
+const IncomeForm = ({ id }) => {
+  const { incomeData } = useDataContext();
+
   const [income, setIncome] = useState({
     source: "",
     total: "",
@@ -50,12 +53,21 @@ const IncomeForm = () => {
     if (type === "number") {
       setIncome({
         ...income,
-        [name]: Math.round(value * 100) / 100,
+        [name]: Math.round(Number(value) * 100) / 100,
       });
     } else {
       setIncome({ ...income, [name]: value });
     }
   };
+
+  useEffect(() => {
+    console.log(id);
+    if (id) {
+      const targetIncome = incomeData.data.find((income) => income.id === id);
+
+      setIncome({ ...income, ...targetIncome });
+    }
+  }, []);
 
   return (
     <div className={containerStyles}>
@@ -111,7 +123,7 @@ const IncomeForm = () => {
           options={[
             {
               key: "ot",
-              value: "oneTime",
+              value: "one-time",
               text: "One-Time",
             },
             {
@@ -126,7 +138,7 @@ const IncomeForm = () => {
             },
             {
               key: "bw",
-              value: "biWeekly",
+              value: "bi-weekly",
               text: "Bi-Weekly",
             },
             {
@@ -139,14 +151,13 @@ const IncomeForm = () => {
               value: "annually",
               text: "Annually",
             },
-            {},
             {
               key: "na",
               value: "other",
               text: "Other",
             },
           ]}
-          placeholder="Select the frequency of this income "
+          placeholder="Select the frequency of this income"
           error={
             inputErrors.frequency
               ? {
