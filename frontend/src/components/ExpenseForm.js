@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, Message, Icon } from "semantic-ui-react";
+import { Button, Form, Message, Icon, TextArea } from "semantic-ui-react";
 import { useDataContext } from "../contexts/DataContext";
 
 const ExpenseForm = ({ id }) => {
-  const { expensesData } = useDataContext();
+  const { expensesData, uploadExpense } = useDataContext();
 
   const [expense, setExpense] = useState({
     vendor: "",
@@ -11,6 +11,7 @@ const ExpenseForm = ({ id }) => {
     transactionDate: "",
     paymentMethod: "",
     category: "",
+    description: "",
   });
   const [inputErrors, setInputErrors] = useState({
     vendor: false,
@@ -18,6 +19,7 @@ const ExpenseForm = ({ id }) => {
     transactionDate: false,
     paymentMethod: false,
     category: false,
+    description: false,
   });
 
   const containerStyles = `mx-auto max-w-sm border-4
@@ -29,7 +31,8 @@ const ExpenseForm = ({ id }) => {
       expense.total === "" ||
       expense.transactionDate === "" ||
       expense.paymentMethod === "" ||
-      expense.category === ""
+      expense.category === "" ||
+      expense.description === ""
     ) {
       for (const property in expense) {
         if (expense[property] === "") {
@@ -44,13 +47,14 @@ const ExpenseForm = ({ id }) => {
       console.log("success");
       console.log(expense);
       // send expense data to backend
-
+      uploadExpense(expense);
       //   console.log(resp);
     }
   };
 
   const handleInputChange = (e, { name, value, type }) => {
     console.log(name, value, type);
+
     if (value !== "" && inputErrors[name]) {
       setInputErrors({ ...inputErrors, [name]: false });
     }
@@ -104,7 +108,7 @@ const ExpenseForm = ({ id }) => {
               ? { content: "Please enter an amount", pointing: "above" }
               : null
           }
-          value={expense.total && expense.total.toFixed(2)}
+          value={expense.total}
           onChange={handleInputChange}
         />
         <Form.Input
@@ -172,6 +176,16 @@ const ExpenseForm = ({ id }) => {
           value={userInfo.pw2}
           onChange={handleInputChange}
         /> */}
+
+        <Form.TextArea
+          name="description"
+          label="Description"
+          icon="pencil"
+          placeholder="Describe the expense"
+          value={expense.description}
+          onChange={handleInputChange}
+        />
+
         <Form.Button onClick={handleClick}>
           {id ? "Edit Expense" : "Add Expense"}
         </Form.Button>

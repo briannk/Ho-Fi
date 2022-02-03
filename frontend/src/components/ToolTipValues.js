@@ -1,9 +1,8 @@
 import React from "react";
 
 const ToolTipValues = ({ id, data }) => {
-  console.log(data);
   const group = data.find((point) => point.id === id);
-  console.log(data);
+
   return (
     <ul style={{ listStyle: "none", margin: 0 }}>
       {group &&

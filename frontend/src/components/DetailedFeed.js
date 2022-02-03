@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-
 import DetailedFeedEntry from "./DetailedFeedEntry";
+import { useDataContext } from "../contexts/DataContext";
 
-const DetailedFeed = ({ dataProp = {} }) => {
+const DetailedFeed = ({ dataProp = {}, selectValue }) => {
   const [message, setMessage] = useState(null);
   const [activeIndex, setActiveIndex] = useState(-1);
   const [expand, setExpand] = useState(false);
+
+  const { expensesGroup } = useDataContext();
 
   const showMore = (index) => {
     setActiveIndex(index);
@@ -13,16 +15,17 @@ const DetailedFeed = ({ dataProp = {} }) => {
 
   const Feed = () => {
     let index = 0;
-    return dataProp.data.map((entry) => {
-      return entry.items.map((expense) => {
+    return dataProp.data.map((dataGroup) => {
+      return dataGroup.items.map((dataPoint) => {
         let feedEntry = (
           <DetailedFeedEntry
-            key={index}
-            data={expense}
-            entry={entry}
+            key={dataPoint.id}
+            data={dataPoint}
+            // entry={entry}
             index={index}
+            group={selectValue}
             activeIndex={activeIndex}
-            handleShowMore={showMore}
+            // handleShowMore={showMore}
           />
         );
         index++;

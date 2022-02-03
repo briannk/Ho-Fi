@@ -53,9 +53,15 @@ const SignUp = () => {
       setMessage(
         <Message
           color={resp.success ? "green" : "red"}
-          content={resp.message}
+          content={
+            <>
+              {resp.message}
+              <Link to="/login">Login here.</Link>
+            </>
+          }
         />
       );
+
       console.log(resp);
     }
   };

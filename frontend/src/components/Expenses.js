@@ -1,24 +1,18 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import Overview from "./Overview";
 import DataHistory from "./DataHistory";
 import DataTable from "./DataTable";
 import PieViz from "./PieViz";
 import DetailedFeed from "./DetailedFeed";
-import { spendingData } from "../data/data";
+// import { spendingData } from "../data/data";
+import { useDataContext } from "../contexts/DataContext";
 
 const containerStyles = `container mx-auto py-12`;
 
 const Expenses = () => {
-  const [expenseData, setExpenseData] = useState(null);
-  const [formattedData, setFormattedData] = useState({
-    sortBy: "category",
-    data: "",
-  });
+  const { expensesData, expensesGroup, setExpensesGroup } = useDataContext();
 
-  console.log(expenseData);
-  useState(() => {
-    setExpenseData(spendingData);
-  }, []);
   return (
     <div className={containerStyles}>
       <h1>Expenses</h1>
@@ -28,24 +22,31 @@ const Expenses = () => {
      rounded p-4 mx-1"
         >
           <Overview
-            of="Expenses"
-            dataProp={expenseData}
-            formattedData={formattedData}
-            handleData={(key, value) =>
-              setFormattedData((prev) => {
-                return { ...prev, [key]: value };
-              })
-            }
+            dataProp={expensesData}
+            selectValue={expensesGroup}
+            handleSelect={setExpensesGroup}
           />
-          {formattedData.data && (
+          {expensesData.data ? (
             <>
-              <PieViz dataProp={formattedData} />
-              <DetailedFeed dataProp={formattedData} />
+              <PieViz selectValue={expensesGroup} data={expensesData} />
+              <DetailedFeed
+                dataProp={expensesData}
+                selectValue={expensesGroup}
+              />
             </>
+          ) : (
+            <div>
+              No data to display! You can fix that by
+              <Link to="/expenses/add"> adding an expense!</Link>
+            </div>
           )}
         </div>
         <div className="w-full xl:w-1/2  border-4 rounded p-4 mx-1">
-          {formattedData.data && <DataHistory dataProp={formattedData} />}
+          {expensesData.data ? (
+            <DataHistory dataProp={expensesData} selectValue={expensesGroup} />
+          ) : (
+            <div>No data to visualize!</div>
+          )}
         </div>
       </div>
     </div>
