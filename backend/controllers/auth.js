@@ -2,9 +2,9 @@ const admin = require("firebase-admin");
 
 const serviceAccount = require("../serviceAccountKey.json");
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+// });
 
 const validateToken = async (req, res, next) => {
   let idToken;
@@ -20,9 +20,9 @@ const validateToken = async (req, res, next) => {
   // }
 
   try {
-    console.log(JSON.stringify(idToken));
+    // console.log(JSON.stringify(idToken));
     const decodedIdToken = await admin.auth().verifyIdToken(idToken);
-    console.log(decodedIdToken);
+    // console.log(decodedIdToken);
     req.user = decodedIdToken;
     console.log("successful validation!");
     next();
@@ -37,4 +37,4 @@ const validateToken = async (req, res, next) => {
   }
 };
 
-module.exports = validateToken;
+module.exports = { validateToken };

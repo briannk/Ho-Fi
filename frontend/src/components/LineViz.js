@@ -3,13 +3,17 @@ import React, { useState, useEffect } from "react";
 import round from "../utilities/Round";
 import { Radio, Label } from "semantic-ui-react";
 import { useDataContext } from "../contexts/DataContext";
+import { useAuthContext } from "../contexts/AuthContext";
 
-const LineViz = ({ dataProp = {}, showArea = false }) => {
+const LineViz = ({ dataProp, selectValue }) => {
   const [formattedData, setFormattedData] = useState([]);
   const [summedData, setSummedData] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
 
-  const { budget } = useDataContext();
+  const { getToken } = useAuthContext();
+  const { budget, colorThemes } = useDataContext();
+
+  console.log(formattedData, summedData);
 
   const getMax = (data) => {
     let values = [];
@@ -20,57 +24,18 @@ const LineViz = ({ dataProp = {}, showArea = false }) => {
     return Math.max(...values);
   };
 
-  // create format options between per day vs cummulative spending
-  const formatData = (data) => {
-    return data.map((dataGroup) => {
-      let insertedPoints = {};
-
-      dataGroup.items.forEach((dataPoint) => {
-        let newTotal = dataPoint.total;
-        if (insertedPoints[dataPoint.transactionDate || dataPoint.payDate]) {
-          newTotal +=
-            insertedPoints[dataPoint.transactionDate || dataPoint.payDate];
-        }
-        insertedPoints[dataPoint.transactionDate || dataPoint.payDate] =
-          round(newTotal);
-      });
-
-      let dataPoints = [];
-
-      for (const x in insertedPoints) {
-        dataPoints.push({ x: x, y: insertedPoints[x] });
+  const assignColors = (_data) => {
+    _data.forEach((dataPoint) => {
+      console.log(dataPoint);
+      if (dataPoint.id === "Other") {
+        // defs dont support hsl so need to use rgba
+        dataPoint.color = `hsl(${Math.floor(Math.random() * 360)}, 91%, 71%)`;
+      } else {
+        dataPoint.color = colorThemes[selectValue][dataPoint.id];
       }
-
-      return {
-        id: dataGroup.id,
-        color:
-          dataGroup.color ||
-          `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
-            Math.random() * 255
-          )}, ${Math.floor(Math.random() * 255)}, 0.6)`,
-        data: dataPoints.sort((a, b) => a.x.localeCompare(b.x)),
-      };
     });
-  };
-
-  const sumData = (data) => {
-    return data.map((dataGroup) => {
-      return {
-        ...dataGroup,
-        data: dataGroup.data.map((dataPoint, index) => {
-          return {
-            ...dataPoint,
-            y: dataGroup.data.slice(0, index + 1).reduce(
-              (prev, curr) => {
-                return prev + curr.y;
-              },
-
-              0
-            ),
-          };
-        }),
-      };
-    });
+    console.log(colorThemes[selectValue]);
+    return _data;
   };
 
   const toggleView = (e, { checked }) => {
@@ -78,10 +43,28 @@ const LineViz = ({ dataProp = {}, showArea = false }) => {
   };
 
   useEffect(() => {
-    let data = formatData(dataProp.data);
-    setFormattedData(data);
-    let sum = sumData(data);
-    setSummedData(sum);
+    async function getChartData() {
+      try {
+        console.log(selectValue);
+        const token = await getToken();
+        let resp = await fetch(
+          `http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/${dataProp.of}/charts/line?selectValue=${selectValue}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          }
+        );
+        const chartData = await resp.json();
+        console.log(chartData.payload.lineData);
+        setFormattedData(assignColors(chartData.payload.lineData.unsummedData));
+        setSummedData(assignColors(chartData.payload.lineData.summedData));
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    getChartData();
   }, [dataProp]);
 
   return (
@@ -139,7 +122,7 @@ const LineViz = ({ dataProp = {}, showArea = false }) => {
           pointBorderColor={{ from: "serieColor" }}
           pointLabelYOffset={-12}
           useMesh={true}
-          enableArea={showArea}
+          enableArea={true}
           legends={[
             {
               anchor: "bottom-right",

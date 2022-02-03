@@ -1,20 +1,22 @@
 import React from "react";
 import { Form, Input } from "semantic-ui-react";
 import { useDataContext } from "../contexts/DataContext";
+import { localToUTC, UTCToLocal } from "../utilities/formatDate";
 
-const DateSelect = ({ of, dataProp = {} }) => {
-  const { getExpense, getIncome } = useDataContext();
+const DateSelect = ({ of, dataProp = {}, selectValue }) => {
+  const { getExpenses, getIncome } = useDataContext();
+  console.log(dataProp);
 
   const dateRange = {
     dateStart: dataProp.dateStart,
-    dateEnd: dataProp.dateStart,
+    dateEnd: dataProp.dateEnd,
   };
 
   const handleChange = (e, { name, value }) => {
-    if (of === "Expenses") {
-      getExpense({ ...dateRange, [name]: value });
-    } else if (of === "Income") {
-      getIncome({ ...dateRange, [name]: value });
+    if (dataProp.of === "expenses") {
+      getExpenses({ ...dateRange, [name]: localToUTC(value) }, selectValue);
+    } else if (dataProp.of === "income") {
+      getIncome({ ...dateRange, [name]: localToUTC(value) });
     } else {
       console.log("No 'of' prop");
     }
@@ -25,14 +27,14 @@ const DateSelect = ({ of, dataProp = {} }) => {
       <Input
         name="dateStart"
         type="date"
-        value={dataProp.dateStart}
+        value={UTCToLocal(dataProp.dateStart)}
         onChange={handleChange}
       />
       to
       <Input
         name="dateEnd"
         type="date"
-        value={dataProp.dateEnd}
+        value={UTCToLocal(dataProp.dateEnd)}
         onChange={handleChange}
       />
     </Form>

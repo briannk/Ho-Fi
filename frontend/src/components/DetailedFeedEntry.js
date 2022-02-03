@@ -2,22 +2,29 @@ import React, { useState } from "react";
 import { Icon, Modal, Button, Accordion } from "semantic-ui-react";
 import ExpenseForm from "./ExpenseForm";
 import IncomeForm from "./IncomeForm";
+import { UTCToLocal } from "../utilities/formatDate";
+import { useDataContext } from "../contexts/DataContext";
+import DEFAULT_THEMES from "../constants/defaultThemes";
 
 const DetailedFeedEntry = ({
   data,
   entry,
   index,
+  group,
   activeIndex,
   handleShowMore,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [expand, setExpand] = useState(false);
 
+  const { colorThemes } = useDataContext();
+
   const showMore = (e, { index }) => {
     const newIndex = activeIndex === index ? -1 : index;
     handleShowMore(newIndex);
   };
-  console.log(data);
+
+  console.log(group, data);
 
   return (
     <div>
@@ -28,13 +35,20 @@ const DetailedFeedEntry = ({
       >
         <div
           className="w-1/3 h-full p-4 flex text-2xl sm:text-4xl text-white justify-center items-center"
-          style={{ background: entry.color }}
+          style={{
+            background:
+              colorThemes[group]?.[data[group]] || DEFAULT_THEMES["PRIMARY"],
+          }}
         >
           <b>${data.total.toFixed(2)}</b>
         </div>
         <div
           className="w-2/3 h-full p-4 flex flex-row text-gray-500"
-          style={{ border: `2px solid ${entry.color}` }}
+          style={{
+            border: `2px solid ${
+              colorThemes[group]?.[data[group]] || DEFAULT_THEMES["PRIMARY"]
+            }`,
+          }}
         >
           <div className="w-full h-full flex flex-col justify-between gap-1">
             {/* <div className=""> */}
@@ -43,7 +57,7 @@ const DetailedFeedEntry = ({
                 {data.transactionDate ? (
                   <>
                     <Icon name="calendar alternate" title="Transaction Date" />
-                    {data.transactionDate}
+                    {UTCToLocal(data.transactionDate)}
                   </>
                 ) : (
                   <>

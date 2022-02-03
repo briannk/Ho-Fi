@@ -6,14 +6,10 @@ import DISPLAYS from "../constants/displays";
 import CHART_TYPE from "../constants/chartTypes";
 import DataTable from "./DataTable";
 
-const DataHistory = ({ dataProp = {} }) => {
+const DataHistory = ({ dataProp = {}, selectValue }) => {
   return (
     <div>
-      <LineViz
-        dataProp={dataProp}
-        // display={DISPLAYS.EXPENSES}
-        // chart={CHART_TYPE.PIE}
-      />
+      <LineViz dataProp={dataProp} selectValue={selectValue} />
       <DataTable dataProp={dataProp} />
     </div>
   );

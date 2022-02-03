@@ -2,78 +2,75 @@ import React, { useState, useEffect, useRef } from "react";
 import { ResponsivePie } from "@nivo/pie";
 import getTotal from "../utilities/total";
 import DISPLAYS from "../constants/displays";
-// import { curveFromProp } from "@nivo/core";
+import { patternDotsDef } from "@nivo/core";
 import ToolTipValues from "./ToolTipValues";
 
-const PieViz = ({ dataProp = {} }) => {
-  const [data, setData] = useState([]);
-  const dataRef = useRef();
+import { useAuthContext } from "../contexts/AuthContext";
+import { useDataContext } from "../contexts/DataContext";
 
-  const sumSmall = () => {
-    let summedData = [];
-    let other = {
-      id: "Other",
-      value: 0,
-      color: `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(
-        Math.random() * 255
-      )}, ${Math.floor(Math.random() * 255)}, 0.6)`,
-      items: [],
-    };
-    const total = dataProp.data
-      .map((dataGroup) => getTotal(dataGroup.items))
-      .reduce((p, c) => p + c);
-    dataProp.data.forEach((dataGroup) => {
-      if (dataGroup.value < total / 10) {
-        other.value += dataGroup.value;
-        other.items.push(...dataGroup.items);
+const PieViz = ({ selectValue, data }) => {
+  const [pieData, setPieData] = useState([]);
+  const { getToken } = useAuthContext();
+
+  const { colorThemes } = useDataContext();
+
+  console.log(pieData);
+
+  const mergeCommon = (_data) => {
+    let chartData = {};
+    _data.forEach((dataPoint) => {
+      if (chartData[dataPoint.id]) {
+        chartData[dataPoint.id].value += dataPoint.value;
       } else {
-        summedData.push(dataGroup);
+        chartData[dataPoint.id] = dataPoint;
       }
     });
-    if (other.value > 0) {
-      summedData.push(other);
-    }
-    setData(summedData);
-    dataRef.current = summedData;
+    console.log(chartData);
+    return Object.values(chartData);
   };
 
-  // const ToolTipValues = ({ id }, dataProp) => {
-  //   console.log(id);
-  //   const group = data.find((point) => point.id === id);
-  //   console.log(data, dataProp);
-  //   return (
-  //     <ul style={{ listStyle: "none", margin: 0 }}>
-  //       {group &&
-  //         group.items.map((point) => (
-  //           <li>
-  //             ${point.total.toFixed(2)}
-  //             {group.id === "Other" && `(${point.vendor || point.source})`}
-  //           </li>
-  //         ))}
-  //     </ul>
-  //   );
-  // };
-
-  const ToolTip = ({ id, color }) => (
-    <div
-      style={{
-        padding: 12,
-
-        background: color,
-      }}
-    >
-      <strong>
-        {console.log(dataRef.current)}
-        <ToolTipValues id={id} data={dataRef.current} />
-      </strong>
-    </div>
-  );
+  const assignColors = (_data) => {
+    _data.forEach((dataPoint) => {
+      console.log(dataPoint);
+      if (dataPoint.id === "Other") {
+        // defs dont support hsl so need to use rgba
+        dataPoint.color = `hsl(${Math.floor(Math.random() * 360)}, 91%, 71%)`;
+      } else {
+        dataPoint.color = colorThemes[selectValue][dataPoint.id];
+      }
+    });
+    console.log(colorThemes[selectValue]);
+    setPieData(_data);
+  };
 
   useEffect(() => {
-    sumSmall();
-  }, [dataProp]);
+    async function getChartData() {
+      try {
+        console.log(selectValue);
+        const token = await getToken();
+        let resp = await fetch(
+          `http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/${data.of}/charts/pie?selectValue=${selectValue}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          }
+        );
+        const chartData = await resp.json();
+        console.log(chartData.payload.pieData);
+        const _data = mergeCommon(chartData.payload.pieData);
+        assignColors(_data);
+        console.log(_data);
+      } catch (e) {
+        console.log(e);
+      }
+    }
 
-  return (
+    getChartData();
+  }, [selectValue, data]);
+
+  return data ? (
     <div
       className="h-96 border-4
      rounded p-4 mx-1"
@@ -81,11 +78,29 @@ const PieViz = ({ dataProp = {} }) => {
       <ResponsivePie
         margin={{ top: 40, right: 40, bottom: 40, left: 40 }}
         valueFormat=" >-$0.2f"
-        data={data}
+        data={pieData}
         colors={{ datum: "data.color" }}
+        theme={{ fontSize: "0.8em" }}
+        // defs={[
+        //   // {
+        //   //   id: "lines",
+        //   //   type: "patternLines",
+        //   //   // background: "inherit",
+        //   //   color: "inherit",
+        //   //   rotation: -45,
+        //   //   lineWidth: 6,
+        //   //   spacing: 10,
+        //   // },
+        //   patternDotsDef("dots", { color: "inherit" }),
+        //   // patternLinesDef("lines", {
+        //   //   color: "inherit",
+        //   //   // background: "inherit",
+        //   // }),
+        // ]}
+        // fill={[{ match: { id: "Other" }, id: "dots" }]}
         animate={true}
         activeOuterRadiusOffset={8}
-        innerRadius={0.6}
+        innerRadius={0.5}
         padAngle={0.5}
         cornerRadius={5}
         arcLinkLabelsColor={{
@@ -96,11 +111,13 @@ const PieViz = ({ dataProp = {} }) => {
           from: "color",
           modifiers: [["darker", 1.2]],
         }}
-        tooltip={({ datum: { id, color } }) => (
-          <ToolTip id={id} color={color} />
-        )}
+        // tooltip={({ datum: { id, color } }) => (
+        //   <ToolTip id={id} color={color} />
+        // )}
       />
     </div>
+  ) : (
+    <>No data to display!</>
   );
 };
 

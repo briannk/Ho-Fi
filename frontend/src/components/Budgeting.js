@@ -9,7 +9,6 @@ import CountUp from "react-countup";
 import LineViz from "./LineViz";
 import FilterReducer from "./FilterReducer";
 import BudgetLimit from "./BudgetLimit";
-// import { isCompositeComponent } from "react-dom/cjs/react-dom-test-utils.production.min";
 import BudgetVisual from "./BudgetVisual";
 import DataTable from "./DataTable";
 
@@ -29,6 +28,23 @@ function reducer(state = {}, { type, payload }) {
       return state;
   }
 }
+
+// consider having chart calculations done on frontend,
+// chart display will be based on data on the client
+// and as such will adjust if for example more data is
+// loaded via pagination
+// toggling feature in budgeting would make it cumbersome
+// (data-costly in that toggling a single value, would require
+// a new set of data from the server and new chart data which can
+// become an issue if dealing with large data sets)
+// and data-costly if a request was required on every toggle
+// this method will cause inconvenience to users with dated
+// hardware but is imo preferable for cleaner, less convoluted code
+// simply for the sake of having most calculations done on the backend
+// which, in this instance, is not suitable
+// moving forward, any cosmetic changes will be done on the frontend
+// add a show all along with a show more option so that the user
+// does not need to excessively paginate for the full data set
 
 const Budgeting = () => {
   const [expenseData, setExpenseData] = useState({ data: [{}] });

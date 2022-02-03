@@ -80,8 +80,9 @@ const AuthProvider = ({ children }) => {
   const getToken = async () => {
     console.log("getToken");
     try {
-      await auth.currentUser.getIdToken();
+      const token = await auth.currentUser.getIdToken();
       console.log("Token retrieval successful.");
+      return token;
     } catch (err) {
       console.log("Token retrieval failed.");
     }
@@ -145,10 +146,10 @@ const AuthProvider = ({ children }) => {
   const providerValue = {
     user,
     isLoggedIn,
+    getToken,
     verifyEmail,
     logIn,
     signUp,
-    getToken,
     signOut,
     sendResetEmail,
   };

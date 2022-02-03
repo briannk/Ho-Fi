@@ -22,7 +22,7 @@ const DataTable = ({ dataProp, setData, toggleable = false }) => {
     }
   };
 
-  const populateHeader = () => {
+  const TableHeaders = () => {
     return toggleable
       ? [
           <Table.HeaderCell>Toggle</Table.HeaderCell>,
@@ -126,7 +126,9 @@ const DataTable = ({ dataProp, setData, toggleable = false }) => {
     <div>
       <Table basic="very" sortable celled selectable>
         <Table.Header>
-          <Table.Row>{populateHeader()}</Table.Row>
+          <Table.Row>
+            <TableHeaders />
+          </Table.Row>
         </Table.Header>
         <TableBody />
       </Table>
