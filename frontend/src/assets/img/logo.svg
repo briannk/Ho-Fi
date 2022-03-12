@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="120" viewBox="0 0 256 120">
+  <defs>
+    <style>
+      .cls-1 {
+        font-size: 72px;
+        font-family: Roboto;
+        font-weight: 700;
+      }
+
+      .cls-2 {
+        fill: #51c49e;
+      }
+    </style>
+  </defs>
+  <text id="Ho-Fi" class="cls-1" x="39.146" y="86.203">Ho<tspan class="cls-2">-</tspan>Fi</text>
+</svg>
