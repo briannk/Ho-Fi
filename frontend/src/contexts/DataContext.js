@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-// temporary until db is up
-import { spendingData, payData } from "../data/data";
 import { useAuthContext } from "./AuthContext";
-import { UTCToLocal, localToUTC, getWeekAgo } from "../utilities/formatDate";
-import { generateThemes } from "../utilities/generateThemes";
+import { assignColors, generateThemes } from "../utilities/generateThemes";
+import groupData from "../utilities/groupData";
+import isEmpty from "lodash.isempty";
+import merge from "lodash.merge";
+import cloneDeep from "lodash.clonedeep";
+import getCurrentDateRange from "../utilities/getCurrentDateRange";
 
 const DataContext = React.createContext();
 
@@ -20,133 +22,207 @@ const DataProvider = ({ children }) => {
     data: null,
     anchor: null,
   });
-  const [incomeData, setIncomeData] = useState(null);
+  const [incomeData, setIncomeData] = useState({
+    of: "income",
+    dateStart: "",
+    dateEnd: "",
+    total: 0,
+    data: null,
+    anchor: null,
+  });
   const [budget, setBudget] = useState({ limit: 0, date: "" });
+  // colorThemes deals with the color-data mappings
+  // colorTable records the currently used colors to avoid
+  // reused colors
   const [colorThemes, setColorThemes] = useState({});
+  const [colorTable, setColorTable] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const [expensesGroup, setExpensesGroup] = useState("category");
-  const [incomeGroup, setIncomeGroup] = useState("vendor");
-
-  console.log(colorThemes);
+  const [incomeGroup, setIncomeGroup] = useState("source");
 
   const { getToken } = useAuthContext();
 
-  const getExpenses = async (dateRange, orderBy = "category") => {
-    const dateEnd = dateRange ? dateRange.dateEnd : localToUTC();
-    const dateStart = dateRange ? dateRange.dateStart : getWeekAgo(dateEnd);
-    console.log(dateStart, dateEnd);
+  const getExpenses = async (
+    dateRange,
+    group = "category",
+    getAll = false,
+    isNew = true
+  ) => {
+    const dateEnd = dateRange ? dateRange.dateEnd : expensesData.dateEnd;
+    const dateStart = dateRange ? dateRange.dateStart : expensesData.dateStart;
 
-    // visualization data should represent all data in date range,
-    // therefore all calculations should reside on the backend
-    // for colors/themes, create an object (frontend) recording themes,
-    // if an existing theme exists for a key, assign it,
-    // otherwise create a new entry
-    // feed data must be paginated and only be changed by select
-    // or sort values
-    // changes in select values should not make db calls (look into caching)
-    // changes of select value should regenerate themes
-    // only possibly sort changes to search all of data
-    // keep the visual data and feed data separate but in the same response
-    //
-    // retrieve data based on time frame and sorting method,
-    // calculate visualization data (and consider caching it
-    // and retrieving if the data hasnt been altered to reduce
-    // the need to compute the data on every call)
-    // retrieve data in chunks of 10
-    // group by select value for both sets of data
-    // generate themes for both sets of data, and maintain an object
-    // to keep track of themes
-    // on the frontend simply append the new data to the old,
-    // only if paginated
-    // other cases start from chunk of 10
+    let anchor = isNew ? null : expensesData.anchor;
 
     // look into methods to prevent abuse
     let data;
+    let result;
+    let resultData = [];
+    let total = 0;
+    let hasMore = false;
     try {
       const token = await getToken();
-      const resp = await fetch(
-        `http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/expenses?&dateStart=${dateStart}&dateEnd=${dateEnd}&orderBy=${orderBy}${
-          expensesData.anchor ? `&anchor=${expensesData.anchor}` : ""
-        }`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: "Bearer " + token,
-          },
+      do {
+        const resp = await fetch(
+          `http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/expenses?&dateStart=${dateStart}&dateEnd=${dateEnd}&orderBy=${group}${
+            anchor ? `&anchor=${anchor}` : ""
+          }`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          }
+        );
+        result = await resp.json();
+        total += result.payload.total;
+        if (getAll) {
+          resultData = [...resultData, ...result.payload.data];
+          hasMore = anchor = result.payload.anchor;
+        } else {
+          resultData = result.payload.data;
+          break;
         }
-      );
-      const result = await resp.json();
+      } while (hasMore);
 
-      console.log(orderBy);
-      setColorThemes(generateThemes(...result.payload.data, orderBy));
-      setExpensesGroup(orderBy);
+      let respData = groupData(resultData, group);
+      const themeObj = await generateThemes(
+        respData,
+        "expenses",
+        colorThemes,
+        colorTable
+      );
+
+      if (!isEmpty(themeObj)) {
+        setColorThemes((prev) => {
+          const prevCopy = cloneDeep(prev);
+          return merge(prevCopy, themeObj.themes);
+        });
+        setColorTable((prev) => {
+          const prevCopy = cloneDeep(prev);
+          return merge(prevCopy, themeObj.table);
+        });
+      }
+
+      respData = assignColors(respData, group, themeObj.themes);
+
       data = {
         of: "expenses",
+        group: group,
         dateStart: dateStart,
         dateEnd: dateEnd,
-        data: result.payload.data,
-        total: result.payload.total || 0,
+        data:
+          isNew || isEmpty(expensesData.data)
+            ? respData
+            : [...expensesData.data, ...respData],
+        total: isNew ? total : total + expensesData.total,
         anchor: result.payload.anchor,
       };
     } catch (e) {
       console.log(e);
       data = {
         of: "expenses",
+        group: group,
         dateStart: dateStart,
         dateEnd: dateEnd,
         data: null,
         total: 0,
       };
+      // throw e;
+    } finally {
+      setExpensesData(data);
     }
-
-    console.log(data);
-    setExpensesData(data);
   };
 
-  const getSomeExpenses = async (dateRange) => {
-    console.log(
-      `fetching expenses for dates between ${dateRange.dateStart} to ${dateRange.dateEnd}`
-    );
+  const getIncome = async (
+    dateRange,
+    group = "source",
+    getAll = false,
+    isNew = true
+  ) => {
+    const dateEnd = dateRange ? dateRange.dateEnd : incomeData.dateEnd;
+    const dateStart = dateRange ? dateRange.dateStart : incomeData.dateStart;
+
+    let anchor = isNew ? null : incomeData.anchor;
+
+    let data;
     let result;
+    let resultData = [];
+    let total = 0;
+    let hasMore = false;
     try {
       const token = await getToken();
-      const resp = await fetch(
-        `http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/expenses/dateRange?dateStart=${dateRange.dateStart}&dateEnd=${dateRange.dateEnd}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: "Bearer " + token,
-          },
+      do {
+        const resp = await fetch(
+          `http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/income?&dateStart=${dateStart}&dateEnd=${dateEnd}&orderBy=${group}${
+            anchor ? `&anchor=${anchor}` : ""
+          }`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          }
+        );
+        result = await resp.json();
+        total += result.payload.total;
+        if (getAll) {
+          resultData = [...resultData, ...result.payload.data];
+          hasMore = anchor = result.payload.anchor;
+        } else {
+          resultData = result.payload.data;
+          break;
         }
+      } while (hasMore);
+
+      let respData = groupData(resultData, group);
+      const themeObj = await generateThemes(
+        respData,
+        "income",
+        colorThemes,
+        colorTable
       );
+      if (!isEmpty(themeObj)) {
+        setColorThemes((prev) => {
+          const prevCopy = cloneDeep(prev);
+          return merge(prevCopy, themeObj.themes);
+        });
+        setColorTable((prev) => {
+          const prevCopy = cloneDeep(prev);
+          return merge(prevCopy, themeObj.table);
+        });
+      }
 
-      result = {
-        dateStart: dateRange.dateStart,
-        dateEnd: dateRange.dateEnd,
-        data: await resp.json(),
+      respData = assignColors(respData, group, themeObj.themes);
 
-        // console.log;
+      data = {
+        of: "income",
+        group: group,
+        dateStart: dateStart,
+        dateEnd: dateEnd,
+        data: isNew ? respData : [...incomeData.data, ...respData],
+        total: isNew ? total : total + incomeData.total,
+        anchor: result.payload.anchor,
       };
     } catch (e) {
       console.log(e);
-      result = {
-        ...expensesData,
-        dateStart: dateRange.dateStart,
-        dateEnd: dateRange.dateEnd,
+      data = {
+        of: "income",
+        group: group,
+        dateStart: dateStart,
+        dateEnd: dateEnd,
+        data: null,
+        total: 0,
       };
+      // throw e;
     } finally {
-      console.log(result);
-      setExpensesData(result);
+      setIncomeData(data);
     }
   };
-  const getIncome = (dateRange) => {
-    console.log(
-      `fetching income for dates between ${dateRange.dateStart} to ${dateRange.dateEnd}`
-    );
-  };
+
   const uploadExpense = async (expense) => {
     try {
+      console.log(expense);
       const token = await getToken();
       const resp = await fetch(
         `http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/expenses`,
@@ -158,15 +234,143 @@ const DataProvider = ({ children }) => {
           body: JSON.stringify(expense),
         }
       );
-
-      getExpenses();
+      const success = (await resp.json()).success;
+      getExpenses(
+        { dateStart: expensesData.dateStart, dateEnd: expensesData.dateEnd },
+        expensesData.group,
+        false,
+        true
+      );
+      return success;
     } catch (e) {
       console.log(e);
+      throw e;
     }
   };
-  const setIncome = () => {};
+
+  const deleteExpense = async (expense) => {
+    try {
+      const token = await getToken();
+      const resp = await fetch(
+        `http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/expenses/${expense.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+
+      getExpenses(
+        { dateStart: expensesData.dateStart, dateEnd: expensesData.dateEnd },
+        expensesData.group,
+        false,
+        true
+      );
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+  };
+
+  const uploadIncome = async (income) => {
+    try {
+      const token = await getToken();
+      const resp = await fetch(
+        `http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/income`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify(income),
+        }
+      );
+
+      getIncome(
+        { dateStart: incomeData.dateStart, dateEnd: incomeData.dateEnd },
+        incomeData.group,
+        false,
+        true
+      );
+
+      return;
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+  };
+
+  const deleteIncome = async (income) => {
+    try {
+      const token = await getToken();
+      const resp = await fetch(
+        `http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/income/${income.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+
+      getIncome(
+        { dateStart: incomeData.dateStart, dateEnd: incomeData.dateEnd },
+        incomeData.group,
+        false,
+        true
+      );
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+  };
+
+  const getBudget = async () => {
+    try {
+      const token = await getToken();
+      const resp = await fetch(
+        `http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/expenses/budgeting/limit`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+      const result = await resp.json();
+      setBudget((prev) => {
+        return { ...prev, ...result.payload };
+      });
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+  };
+
+  const uploadBudget = async (budget) => {
+    try {
+      const token = await getToken();
+      const resp = await fetch(
+        `http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/expenses/budgeting/limit`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify(budget),
+        }
+      );
+
+      await getBudget();
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+  };
 
   useEffect(() => {
+    const dateRange = getCurrentDateRange();
     async function loadMockData() {
       try {
         const token = await getToken();
@@ -177,25 +381,27 @@ const DataProvider = ({ children }) => {
             headers: {
               Authorization: "Bearer " + token,
             },
-            // body: JSON.stringify({
-            //   vendor: "Taco Bell",
-            //   total: 10.98,
-            //   transactionDate: "2021-11-21",
-            //   paymentMethod: "credit/debit",
-            //   category: "Food",
-            //   description: "",
-            // }),
           }
         );
-        getExpenses();
+        await fetch(
+          "http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/income/test",
+          {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          }
+        );
+
+        await getExpenses(dateRange);
+        await getIncome(dateRange);
+        await getBudget();
       } catch (e) {
         console.log(e);
       }
     }
+
     loadMockData();
-    // getExpenses();
-    // setExpensesData(spendingData);
-    setIncomeData(payData);
     setIsLoading(false);
   }, []);
 
@@ -203,16 +409,19 @@ const DataProvider = ({ children }) => {
     expensesData,
     incomeData,
     getExpenses,
-    getSomeExpenses,
     getIncome,
     uploadExpense,
+    deleteExpense,
     budget,
-    setBudget,
+    getBudget,
+    uploadBudget,
     colorThemes,
     expensesGroup,
     setExpensesGroup,
     incomeGroup,
     setIncomeGroup,
+    uploadIncome,
+    deleteIncome,
   };
   return (
     <DataContext.Provider value={providerValue}>

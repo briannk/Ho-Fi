@@ -5,13 +5,6 @@ const localToUTC = (date) => {
   } else {
     local = new Date(date);
   }
-  // const temp = new Date(1637452800 * 1000);
-  // console.log(
-  //   "utc: ",
-  //   temp.getUTCFullYear(),
-  //   temp.getUTCMonth() + 1,
-  //   temp.getUTCDate()
-  // );
   return `${local.getUTCFullYear()}-${(local.getUTCMonth() + 1)
     .toString()
     .padStart(2, 0)}-${local.getUTCDate().toString().padStart(2, 0)}`;
@@ -19,8 +12,6 @@ const localToUTC = (date) => {
 
 const UTCToLocal = (date) => {
   const utc = new Date(date);
-  // const utc = new Date(1637452800 * 1000);
-  // console.log("local: ", utc.getFullYear(), utc.getMonth() + 1, utc.getDate());
   return `${utc.getFullYear()}-${(utc.getMonth() + 1)
     .toString()
     .padStart(2, 0)}-${utc.getDate().toString().padStart(2, 0)}`;

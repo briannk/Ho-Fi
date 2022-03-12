@@ -14,12 +14,12 @@ const getMeta = async (user, category) => {
     return doc.data();
   } catch (e) {
     console.log(e);
+    throw e;
   }
 };
 
 // stores metadata for the specified category
 const setMeta = async (user, category, key, data) => {
-  console.log(user, category, key, data);
   try {
     await db
       .collection("users")
@@ -29,6 +29,7 @@ const setMeta = async (user, category, key, data) => {
       .set({ [key]: data }, { merge: true });
   } catch (e) {
     console.log(e);
+    throw e;
   }
 };
 

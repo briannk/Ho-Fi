@@ -9,7 +9,6 @@ const db = getFirestore();
 // created under the user containing the computed data
 // required for visualizing the data
 const cacheVisualData = async (user, data, mergeData) => {
-  console.log("caching");
   try {
     const doc = await db
       .collection("users")
@@ -17,7 +16,6 @@ const cacheVisualData = async (user, data, mergeData) => {
       .collection("expenses")
       .doc("cachedData")
       .get();
-    console.log(doc);
     const cacheLastModified = doc.lastModified;
     // if (cacheLastModified === dataLastModified) {
     //   return;
@@ -30,11 +28,9 @@ const cacheVisualData = async (user, data, mergeData) => {
   const selectOptions = Object.keys(data[0]).filter(
     (key) => !keysToExclude.includes(key)
   );
-  console.log("keys: ", selectOptions);
 
   selectOptions.forEach(async (selectValue) => {
     const groupedData = groupData(data, selectValue);
-    console.log("groupedData: ", groupedData);
     const pieData = formatPieData(groupedData);
     const lineData = formatLineData(groupedData);
     //   const selectValue = Object.keys(data)[0];
