@@ -16,7 +16,7 @@ router.route("/").get(getExpenses).post(setExpense);
 
 // router.route("/charts/:chart").get(getChart);
 
-router.route("/test").get(populateDB);
+// router.route("/test").get(populateDB);
 
 router.route("/:id").put(setExpense).delete(deleteExpense);
 
