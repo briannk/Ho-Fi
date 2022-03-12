@@ -78,10 +78,8 @@ const AuthProvider = ({ children }) => {
   };
 
   const getToken = async () => {
-    console.log("getToken");
     try {
       const token = await auth.currentUser.getIdToken();
-      console.log("Token retrieval successful.");
       return token;
     } catch (err) {
       console.log("Token retrieval failed.");
@@ -89,7 +87,6 @@ const AuthProvider = ({ children }) => {
   };
 
   const verifyEmail = async (user) => {
-    console.log("sending verification");
     try {
       await user.sendEmailVerification();
       return {
@@ -106,16 +103,13 @@ const AuthProvider = ({ children }) => {
   };
 
   const sendResetEmail = async (email) => {
-    console.log("sending password reset");
     try {
       const resp = await auth.sendPasswordResetEmail(email);
-      console.log(resp);
       return {
         message: "A reset link has been sent to the e-mail address.",
         success: true,
       };
     } catch (err) {
-      console.log(err.message);
       let message;
       switch (err.code) {
         case "auth/invalid-email":

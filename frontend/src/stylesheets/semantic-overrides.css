@@ -1,0 +1,23 @@
+button.ui.button {
+  margin: 0;
+}
+
+/* .ui.basic.table td,
+.ui.basic.table tr {
+  background: transparent !important;
+}
+
+tr.row:hover,
+.ui.celled.table tr:hover,
+tr.row:active,
+tr.row:focus,
+.ui.basic.table td:hover {
+  background: brown !important;
+} */
+
+.ui.selectable.table tbody tr.row:hover,
+.ui.table tbody tr td.selectable:hover {
+  background: white !important;
+  /* filter: brightness(85%); */
+  font-weight: bold;
+}

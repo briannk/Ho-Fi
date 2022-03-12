@@ -151,45 +151,6 @@ const payData = {
       frequency: "one-time",
       description: "Trade & withdrawal",
     },
-
-    // {
-    //   startDate: "11-21-2021",
-    //   endDate: "12-20-2021",
-    //   data: [
-    //     {
-    //       id: 24,
-    //       source: "DoorDash",
-    //       total: 21,
-    //       payDate: "11-23-2021",
-    //       frequency: "one-time",
-    //       description: "refund for incorrect order",
-    //     },
-    //     {
-    //       id: 26,
-    //       source: "Microsoft",
-    //       total: 1935.76,
-    //       payDate: "11-30-2021",
-    //       frequency: "bi-weekly",
-    //       description: "paycheck",
-    //     },
-    //     {
-    //       id: 32,
-    //       source: "Microsoft",
-    //       total: 8.26,
-    //       payDate: "12-06-2021",
-    //       frequency: "quarterly",
-    //       description: "Stock dividends",
-    //     },
-    //     {
-    //       id: 34,
-    //       source: "RobinHood",
-    //       total: 8.26,
-    //       payDate: "12-11-2021",
-    //       frequency: "one-time",
-    //       description: "Trade & withdrawal",
-    //     },
-    //   ],
-    // },
   ],
 };
 

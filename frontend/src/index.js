@@ -7,12 +7,15 @@ import "semantic-ui-css/semantic.min.css";
 
 import AuthProvider from "./contexts/AuthContext";
 import DataProvider from "./contexts/DataContext";
+import MsgProvider from "./contexts/MsgContext";
 
 ReactDOM.render(
   <React.StrictMode>
     <AuthProvider>
       <DataProvider>
-        <App />
+        <MsgProvider>
+          <App />
+        </MsgProvider>
       </DataProvider>
     </AuthProvider>
   </React.StrictMode>,

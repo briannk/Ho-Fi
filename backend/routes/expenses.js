@@ -1,29 +1,27 @@
 const express = require("express");
-
 const {
   getExpenses,
-  getSomeExpenses,
   setExpense,
   deleteExpense,
   populateDB,
+  setLimit,
+  getLimit,
 } = require("../controllers/expenses");
 
-const { getChart } = require("../controllers/charts");
+// const { getChart } = require("../controllers/charts");
 
 const router = express.Router();
 
-// router.use(validateToken);
+router.route("/").get(getExpenses).post(setExpense);
 
-router.route("/").get(getExpenses).post(setExpense).put(setExpense);
-
-// // create controllers to return appropriate data
-// // for client to utilize
-router.route("/charts/:chart").get(getChart);
+// router.route("/charts/:chart").get(getChart);
 
 router.route("/test").get(populateDB);
 
-router.route("/:id").delete(deleteExpense);
+router.route("/:id").put(setExpense).delete(deleteExpense);
 
-router.route("/budgeting").post(getExpenses);
+// router.route("/budgeting").post(getExpenses);
+
+router.route("/budgeting/limit").get(getLimit).post(setLimit);
 
 module.exports = router;

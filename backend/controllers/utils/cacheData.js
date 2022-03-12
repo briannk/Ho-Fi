@@ -19,7 +19,6 @@ const getCachedData = async (user, category) => {
 
 // stores metadata for the specified category
 const setCachedData = async (user, category, key, data) => {
-  console.log(user, category, key, data);
   try {
     await db
       .collection("users")

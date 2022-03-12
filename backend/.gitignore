@@ -1,1 +1,5 @@
 /node_modules
+/firestore-debug.log
+/serviceAccountKey.json
+/.env
+/ui-debug.log
