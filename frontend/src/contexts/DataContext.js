@@ -371,37 +371,10 @@ const DataProvider = ({ children }) => {
 
   useEffect(() => {
     const dateRange = getCurrentDateRange();
-    async function loadMockData() {
-      try {
-        const token = await getToken();
-        await fetch(
-          "http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/expenses/test",
-          {
-            method: "GET",
-            headers: {
-              Authorization: "Bearer " + token,
-            },
-          }
-        );
-        await fetch(
-          "http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/income/test",
-          {
-            method: "GET",
-            headers: {
-              Authorization: "Bearer " + token,
-            },
-          }
-        );
 
-        await getExpenses(dateRange);
-        await getIncome(dateRange);
-        await getBudget();
-      } catch (e) {
-        console.log(e);
-      }
-    }
-
-    loadMockData();
+    await getExpenses(dateRange);
+    await getIncome(dateRange);
+    await getBudget();
     setIsLoading(false);
   }, []);
 
