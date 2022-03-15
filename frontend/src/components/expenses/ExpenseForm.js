@@ -85,7 +85,7 @@ const ExpenseForm = ({ dataProp }) => {
 
   return (
     <div className={containerStyles}>
-      <ImgParser />
+      {/* <ImgParser /> */}
       <h3>Fill out every field:</h3>
       <Form className="my-4">
         <Form.Input
