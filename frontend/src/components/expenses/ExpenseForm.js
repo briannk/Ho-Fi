@@ -3,6 +3,7 @@ import { Form } from "semantic-ui-react";
 import { useDataContext } from "../../contexts/DataContext";
 import { useMsgContext } from "../../contexts/MsgContext";
 import { useNavigate } from "react-router";
+import ImgParser from "../common/ImgParser";
 
 const ExpenseForm = ({ dataProp }) => {
   const { uploadExpense } = useDataContext();
@@ -84,6 +85,7 @@ const ExpenseForm = ({ dataProp }) => {
 
   return (
     <div className={containerStyles}>
+      <ImgParser />
       <h3>Fill out every field:</h3>
       <Form className="my-4">
         <Form.Input

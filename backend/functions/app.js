@@ -1,8 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 // firestore stuff
-const { initializeApp } = require("firebase-admin/app");
-initializeApp();
+// const { initializeApp } = require("firebase-admin/app");
+// initializeApp();
 const { validateToken } = require("./controllers/auth");
 
 const app = express();

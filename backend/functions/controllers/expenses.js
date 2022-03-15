@@ -5,7 +5,7 @@ const isEmpty = require("lodash.isempty");
 const { setMeta, getMeta } = require("./utils/meta");
 
 const db = getFirestore();
-db.settings({ ignoreUndefinedProperties: true });
+// db.settings({ ignoreUndefinedProperties: true });
 
 const getExpenses = async (req, res) => {
   try {
