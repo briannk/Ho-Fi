@@ -25,9 +25,6 @@ jobs:
           entrypoint: "./frontend"
   deploy_backend:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
     steps:
       - uses: w9jds/firebase-action@master
         with:
