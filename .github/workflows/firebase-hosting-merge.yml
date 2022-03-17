@@ -12,18 +12,19 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: build and deploy frontend
-      - run: |
-        cd frontend
-        npm ci && npm run build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_HO_FI_598A7 }}"
-          channelId: live
-          projectId: ho-fi-598a7
+        run: |
+          cd frontend
+          npm ci && npm run build
+        working-directory: ./frontend
+        uses: FirebaseExtended/action-hosting-deploy@v0
+          with:
+            repoToken: "${{ secrets.GITHUB_TOKEN }}"
+            firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_HO_FI_598A7 }}"
+            channelId: live
+            projectId: ho-fi-598a7
       - name: deploy backend functions
-      - run:
-        cd backend
+      run:
+        working-directory: ./backend
       uses: w9jds/firebase-action@master
         with:
           args: deploy --only hosting
