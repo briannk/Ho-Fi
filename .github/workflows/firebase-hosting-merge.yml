@@ -12,7 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: build and deploy frontend
-        working-directory: ./frontend
         run: |
           cd frontend
           npm ci && npm run build
@@ -23,8 +22,7 @@ jobs:
           channelId: live
           projectId: ho-fi-598a7
       - name: deploy backend functions
-        run:
-          working-directory: ./backend
+        run: cd backend
       - uses: w9jds/firebase-action@master
         with:
           args: deploy --only functions
