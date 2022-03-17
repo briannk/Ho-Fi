@@ -26,8 +26,14 @@ jobs:
   deploy_backend:
     runs-on: ubuntu-latest
     steps:
+      - name: Install packages
+        run: |
+          cd functions
+          npm install
+        working-directory: backend
       - uses: w9jds/firebase-action@master
         with:
           args: deploy --only functions
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          PROJECT_PATH: backend
