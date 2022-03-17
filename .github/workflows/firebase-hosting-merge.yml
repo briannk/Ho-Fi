@@ -12,11 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: build and deploy frontend
+        working-directory: ./frontend
         run: |
           cd frontend
           npm ci && npm run build
-        working-directory: ./frontend
-        uses: FirebaseExtended/action-hosting-deploy@v0
+      - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_HO_FI_598A7 }}"
@@ -25,7 +25,7 @@ jobs:
       - name: deploy backend functions
         run:
           working-directory: ./backend
-        uses: w9jds/firebase-action@master
+      - uses: w9jds/firebase-action@master
         with:
           args: deploy --only functions
         env:
