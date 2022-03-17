@@ -43,7 +43,14 @@ body,
 .App {
   height: 100%;
 }
+<<<<<<< HEAD
 
 #root {
   background: blue;
 }
+=======
+/* 
+#root {
+  background: blue;
+} */
+>>>>>>> bkong/remove-placeholder-data

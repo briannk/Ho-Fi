@@ -49,6 +49,8 @@ const AuthProvider = ({ children }) => {
           break;
       }
       return { message: message, success: false };
+    } finally {
+      setIsLoading(false);
     }
   };
 

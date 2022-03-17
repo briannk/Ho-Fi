@@ -36,29 +36,36 @@ const LogIn = () => {
     } else {
       try {
         const resp = await logIn(userInfo.email, userInfo.pw);
-        if (user && !user.emailVerified) {
-          setMessage({
-            type: "info",
-            content: (
-              <>
-                <p>
-                  E-mail must be verified in order to login. Please check your
-                  inbox or resend the verification.
-                </p>
-                <Button
-                  size="mini"
-                  onClick={async () => await verifyEmail(user)}
-                >
-                  Resend Link
-                </Button>
-              </>
-            ),
-            auto: false,
-          });
+        if (resp.success) {
+          if (user && !user.emailVerified) {
+            setMessage({
+              type: "info",
+              content: (
+                <>
+                  <p>
+                    E-mail must be verified in order to login. Please check your
+                    inbox or resend the verification.
+                  </p>
+                  <Button
+                    size="mini"
+                    onClick={async () => await verifyEmail(user)}
+                  >
+                    Resend Link
+                  </Button>
+                </>
+              ),
+              auto: false,
+            });
+          } else {
+            setMessage({
+              type: "success",
+              content: `Welcome back, ${userInfo.email}!`,
+            });
+          }
         } else {
           setMessage({
-            type: "success",
-            content: `Welcome back, ${userInfo.email}!`,
+            type: "error",
+            content: resp.message,
           });
         }
       } catch (e) {

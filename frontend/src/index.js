@@ -11,13 +11,13 @@ import MsgProvider from "./contexts/MsgContext";
 
 ReactDOM.render(
   <React.StrictMode>
-    <AuthProvider>
-      <DataProvider>
-        <MsgProvider>
+    <MsgProvider>
+      <AuthProvider>
+        <DataProvider>
           <App />
-        </MsgProvider>
-      </DataProvider>
-    </AuthProvider>
+        </DataProvider>
+      </AuthProvider>
+    </MsgProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
