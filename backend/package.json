@@ -18,6 +18,7 @@
     "lodash.isempty": "^4.4.0"
   },
   "devDependencies": {
+    "eslint-config-prettier": "^8.5.0",
     "nodemon": "^2.0.15"
   }
 }

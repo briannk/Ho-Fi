@@ -7,6 +7,8 @@ import merge from "lodash.merge";
 import cloneDeep from "lodash.clonedeep";
 import getCurrentDateRange from "../utilities/getCurrentDateRange";
 
+const apiURL = "https://us-central1-ho-fi-598a7.cloudfunctions.net/app";
+
 const DataContext = React.createContext();
 
 const useDataContext = () => {
@@ -64,7 +66,7 @@ const DataProvider = ({ children }) => {
       const token = await getToken();
       do {
         const resp = await fetch(
-          `http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/expenses?&dateStart=${dateStart}&dateEnd=${dateEnd}&orderBy=${group}${
+          `${apiURL}/api/v1/expenses?&dateStart=${dateStart}&dateEnd=${dateEnd}&orderBy=${group}${
             anchor ? `&anchor=${anchor}` : ""
           }`,
           {
@@ -154,7 +156,7 @@ const DataProvider = ({ children }) => {
       const token = await getToken();
       do {
         const resp = await fetch(
-          `http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/income?&dateStart=${dateStart}&dateEnd=${dateEnd}&orderBy=${group}${
+          `${apiURL}/api/v1/income?&dateStart=${dateStart}&dateEnd=${dateEnd}&orderBy=${group}${
             anchor ? `&anchor=${anchor}` : ""
           }`,
           {
@@ -224,16 +226,13 @@ const DataProvider = ({ children }) => {
     try {
       console.log(expense);
       const token = await getToken();
-      const resp = await fetch(
-        `http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/expenses`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify(expense),
-        }
-      );
+      const resp = await fetch(`${apiURL}/api/v1/expenses`, {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify(expense),
+      });
       const success = (await resp.json()).success;
       getExpenses(
         { dateStart: expensesData.dateStart, dateEnd: expensesData.dateEnd },
@@ -251,15 +250,12 @@ const DataProvider = ({ children }) => {
   const deleteExpense = async (expense) => {
     try {
       const token = await getToken();
-      const resp = await fetch(
-        `http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/expenses/${expense.id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      );
+      const resp = await fetch(`${apiURL}/api/v1/expenses/${expense.id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
 
       getExpenses(
         { dateStart: expensesData.dateStart, dateEnd: expensesData.dateEnd },
@@ -276,16 +272,13 @@ const DataProvider = ({ children }) => {
   const uploadIncome = async (income) => {
     try {
       const token = await getToken();
-      const resp = await fetch(
-        `http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/income`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify(income),
-        }
-      );
+      const resp = await fetch(`${apiURL}/api/v1/income`, {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify(income),
+      });
 
       getIncome(
         { dateStart: incomeData.dateStart, dateEnd: incomeData.dateEnd },
@@ -304,15 +297,12 @@ const DataProvider = ({ children }) => {
   const deleteIncome = async (income) => {
     try {
       const token = await getToken();
-      const resp = await fetch(
-        `http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/income/${income.id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      );
+      const resp = await fetch(`${apiURL}/api/v1/income/${income.id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
 
       getIncome(
         { dateStart: incomeData.dateStart, dateEnd: incomeData.dateEnd },
@@ -329,38 +319,32 @@ const DataProvider = ({ children }) => {
   const getBudget = async () => {
     try {
       const token = await getToken();
-      const resp = await fetch(
-        `http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/expenses/budgeting/limit`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      );
+      const resp = await fetch(`${apiURL}/api/v1/expenses/budgeting/limit`, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
       const result = await resp.json();
       setBudget((prev) => {
         return { ...prev, ...result.payload };
       });
     } catch (e) {
       console.log(e);
-      throw e;
+      // throw e;
     }
   };
 
   const uploadBudget = async (budget) => {
     try {
       const token = await getToken();
-      const resp = await fetch(
-        `http://localhost:5001/ho-fi-598a7/us-central1/app/api/v1/expenses/budgeting/limit`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify(budget),
-        }
-      );
+      const resp = await fetch(`${apiURL}/api/v1/expenses/budgeting/limit`, {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify(budget),
+      });
 
       await getBudget();
     } catch (e) {
@@ -371,10 +355,12 @@ const DataProvider = ({ children }) => {
 
   useEffect(() => {
     const dateRange = getCurrentDateRange();
-
-    await getExpenses(dateRange);
-    await getIncome(dateRange);
-    await getBudget();
+    async function initializeData() {
+      await getExpenses(dateRange);
+      await getIncome(dateRange);
+      await getBudget();
+    }
+    initializeData();
     setIsLoading(false);
   }, []);
 

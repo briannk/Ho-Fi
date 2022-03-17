@@ -1,6 +1,3 @@
-/node_modules
-/firestore-debug.log
-/serviceAccountKey.json
-/.env
-/ui-debug.log
-/.env
+node_modules
+firestore-debug.log
+ui-debug.log

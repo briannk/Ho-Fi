@@ -28,10 +28,8 @@ const Overview = ({ dataProp, selectValue, handleSelect }) => {
   };
 
   useEffect(() => {
-    console.log("useeffect");
     if (dataProp.data) {
       setSortOptions(generateOptions(dataProp.data));
-      console.log("setting options");
     }
     setIsLoading(false);
   }, [dataProp, selectValue]);
