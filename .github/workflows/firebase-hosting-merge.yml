@@ -22,6 +22,7 @@ jobs:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_HO_FI_598A7 }}"
           channelId: live
           projectId: ho-fi-598a7
+          entrypoint: "./frontend"
   deploy_backend:
     runs-on: ubuntu-latest
     defaults:
@@ -33,3 +34,4 @@ jobs:
           args: deploy --only functions
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          PROJECT_PATH: ./backend
