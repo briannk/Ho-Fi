@@ -10,7 +10,8 @@ jobs:
   build_and_deploy_frontend:
     runs-on: ubuntu-latest
     defaults:
-      working-directory: frontend
+      run:
+        working-directory: frontend
     steps:
       - uses: actions/checkout@v2
       - name: build React app
@@ -24,7 +25,8 @@ jobs:
   deploy_backend:
     runs-on: ubuntu-latest
     defaults:
-      working-directory: backend
+      run:
+        working-directory: backend
     steps:
       - uses: w9jds/firebase-action@master
         with:
