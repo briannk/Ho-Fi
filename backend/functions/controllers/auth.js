@@ -1,7 +1,5 @@
 const admin = require("firebase-admin");
 
-const serviceAccount = require("../serviceAccountKey.json");
-
 const validateToken = async (req, res, next) => {
   let idToken;
   if (
