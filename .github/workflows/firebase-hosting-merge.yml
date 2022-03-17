@@ -26,7 +26,6 @@ jobs:
     defaults:
       working-directory: backend
     steps:
-      - name: Deploy backend functions
       - uses: w9jds/firebase-action@master
         with:
           args: deploy --only functions
