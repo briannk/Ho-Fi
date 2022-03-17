@@ -14,7 +14,7 @@ jobs:
       - name: build and deploy frontend
         run: |
           cd frontend
-          npm ci && npm run build
+          npm ci && CI=false npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
