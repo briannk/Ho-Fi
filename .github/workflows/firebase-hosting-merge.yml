@@ -27,10 +27,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install packages
-        run: |
-          cd functions
-          npm i
-        working-directory: ./backend
+        run: npm i
+        working-directory: backend/functions
       - uses: w9jds/firebase-action@master
         with:
           args: deploy --only functions
