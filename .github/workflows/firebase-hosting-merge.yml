@@ -26,6 +26,7 @@ jobs:
   deploy_backend:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Install packages
         run: npm i
         working-directory: backend/functions
