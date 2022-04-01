@@ -103,6 +103,7 @@ const DetailedFeedEntry = ({ data, group, of }) => {
                 <Button
                   basic
                   color="red"
+                  className="border-0"
                   onClick={async () => {
                     try {
                       const resp =
@@ -124,7 +125,11 @@ const DetailedFeedEntry = ({ data, group, of }) => {
                 >
                   Delete
                 </Button>
-                <Button basic onClick={() => setShowConfirm(false)}>
+                <Button
+                  basic
+                  className="border-0"
+                  onClick={() => setShowConfirm(false)}
+                >
                   Cancel
                 </Button>
               </Modal.Actions>

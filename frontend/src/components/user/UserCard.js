@@ -13,9 +13,9 @@ const UserCard = () => {
   const navigate = useNavigate();
 
   // css styles
-  const userCardStyles = `container flex flex-col p-6 mx-auto justify-center items-center 
-    space-y-4 rounded-xl`;
-  const buttonStyles = ``;
+  const userCardStyles = `flex flex-col p-6 mx-auto justify-center items-center 
+    gap-4 lg:gap-2 rounded-xl`;
+  const buttonStyles = `whitespace-nowrap text-white border-2 border-white hover:border-transparent`;
 
   const handleSignOut = async () => {
     try {
@@ -31,7 +31,7 @@ const UserCard = () => {
     <div className={userCardStyles} id="user-card">
       {isLoggedIn ? (
         <>
-          <span>{user.email}</span>
+          <span className="text-white">{user.email}</span>
           <Button
             type="button"
             className={buttonStyles}
@@ -42,19 +42,13 @@ const UserCard = () => {
         </>
       ) : (
         <>
-          <Button
-            content="Log In"
-            className={buttonStyles}
-            as={Link}
-            to="/login"
-          />
-          <span>Don't have an account?</span>
-          <Button
-            content="Sign Up"
-            className={buttonStyles}
-            as={Link}
-            to="/signup"
-          />
+          <Link to="/login">
+            <Button content="Log In" className={buttonStyles} />
+          </Link>
+          <span className="lg:hidden">Don't have an account?</span>
+          <Link to="/signup" className="lg:hidden">
+            <Button content="Sign Up" className={buttonStyles} />
+          </Link>
         </>
       )}
     </div>

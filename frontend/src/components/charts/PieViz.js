@@ -51,10 +51,7 @@ const PieViz = ({ dataProp, selectValue }) => {
   }, [dataProp, selectValue]);
 
   return dataProp ? (
-    <div
-      className="h-96 border-4
-     rounded p-4 mx-1"
-    >
+    <div className="h-96 p-4 m-4">
       <ResponsivePie
         margin={{ top: 40, right: 40, bottom: 40, left: 40 }}
         valueFormat=" >-$0.2f"

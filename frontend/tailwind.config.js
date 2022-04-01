@@ -8,6 +8,12 @@ module.exports = {
       zIndex: {
         902: 902,
         903: 903,
+        904: 904,
+      },
+      colors: {
+        primary: "hsl(159, 48%, 72%)",
+        income: "hsl(145, 91%, 71%)",
+        expenses: "hsl(41, 91%, 71%)",
       },
     },
   },
@@ -15,4 +21,5 @@ module.exports = {
     extend: {},
   },
   plugins: [],
+  important: true,
 };

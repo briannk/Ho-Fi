@@ -68,10 +68,10 @@ const DataTable = ({ dataProp, selectValue, setData, toggleable = false }) => {
               style={{
                 background: colorLightened,
               }}
-              className="row"
+              className="rowColor"
             >
               {toggleable && (
-                <Table.Cell key={dataPoint.id}>
+                <Table.Cell key={dataPoint.id} className="cellColor">
                   <Checkbox
                     checked={
                       toggledData.find((elem) => {

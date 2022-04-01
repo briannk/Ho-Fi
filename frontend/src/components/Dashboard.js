@@ -22,11 +22,8 @@ const Dashboard = () => {
 
   return (
     <div className={containerStyles}>
-      <div className="flex flex-col lg:flex-row gap-2">
-        <div
-          className="w-full lg:w-1/2 max-h-full border-4
-     rounded p-4 mx-1"
-        >
+      <div className="flex flex-col lg:flex-row gap-8">
+        <div className="w-full lg:w-1/2 max-h-full shadow-xl">
           <Overview
             dataProp={expensesData}
             selectValue={expensesGroup}
@@ -44,10 +41,7 @@ const Dashboard = () => {
             <Missing item={"expenses"} />
           )}
         </div>
-        <div
-          className="w-full lg:w-1/2 max-h-full border-4
-     rounded p-4 mx-1"
-        >
+        <div className="w-full lg:w-1/2 max-h-full shadow-xl">
           <Overview
             dataProp={incomeData}
             selectValue={incomeGroup}

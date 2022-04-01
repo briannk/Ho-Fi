@@ -5,12 +5,8 @@ const { getFirestore } = require("firebase-admin/firestore");
 const { initializeApp } = require("firebase-admin/app");
 initializeApp();
 const app = require("./app");
-// const cors = require("cors");
 
 // retrieves app instance which is required to use firebase functionality
-
-console.log("index");
-
 const db = getFirestore();
 db.settings({ ignoreUndefinedProperties: true });
 exports.app = functions.https.onRequest(app);

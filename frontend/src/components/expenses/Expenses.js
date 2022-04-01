@@ -6,18 +6,15 @@ import DetailedFeed from "../feed/DetailedFeed";
 import { useDataContext } from "../../contexts/DataContext";
 import Missing from "../charts/Missing";
 
-const containerStyles = `container mx-auto py-12`;
+const containerStyles = `container mx-auto`;
 
 const Expenses = () => {
   const { expensesData, expensesGroup, setExpensesGroup } = useDataContext();
 
   return (
     <div className={containerStyles}>
-      <div className="flex flex-col xl:flex-row ">
-        <div
-          className="w-full xl:w-1/2  border-4
-     rounded p-4 mx-1"
-        >
+      <div className="flex flex-col xl:flex-row gap-8">
+        <div className="w-full xl:w-1/2 shadow-xl">
           <Overview
             dataProp={expensesData}
             selectValue={expensesGroup}
@@ -35,11 +32,13 @@ const Expenses = () => {
             <Missing item={"expenses"} />
           )}
         </div>
-        <div className="w-full xl:w-1/2  border-4 rounded p-4 mx-1">
+        <div className="w-full xl:w-1/2 shadow-xl">
           {expensesData.data ? (
             <DataHistory dataProp={expensesData} selectValue={expensesGroup} />
           ) : (
-            <div>No data to visualize!</div>
+            <div className="p-8 text-2xl flex justify-center">
+              No data to visualize!
+            </div>
           )}
         </div>
       </div>

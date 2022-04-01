@@ -50,7 +50,7 @@ const DMessage = ({ type, header, content, handleDismiss, auto = true }) => {
   }, []);
   return (
     <div
-      className={`z-903 fixed p-4 w-full flex justify-center transition-opacity duration-1000 ${
+      className={`z-904 fixed p-4 w-full flex justify-center transition-opacity duration-1000 ${
         visible ? "opacity-100" : "opacity-0"
       }`}
     >
@@ -65,7 +65,7 @@ const DMessage = ({ type, header, content, handleDismiss, auto = true }) => {
           setShowMessage(false);
         }}
         size="huge"
-        className="flex justify-center w-full md:w-1/2 "
+        className="flex justify-center w-full md:w-1/2"
       />
     </div>
   );

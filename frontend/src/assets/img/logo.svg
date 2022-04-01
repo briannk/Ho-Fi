@@ -1,16 +1,3 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="256" height="120" viewBox="0 0 256 120">
-  <defs>
-    <style>
-      .cls-1 {
-        font-size: 72px;
-        font-family: Roboto;
-        font-weight: 700;
-      }
-
-      .cls-2 {
-        fill: #51c49e;
-      }
-    </style>
-  </defs>
-  <text id="Ho-Fi" class="cls-1" x="39.146" y="86.203">Ho<tspan class="cls-2">-</tspan>Fi</text>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="256" height="120" viewBox="0 0 256 120">
+  <image id="Ho-Fi" x="43" y="32" width="171" height="55" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKsAAAA3CAYAAABzTLohAAADX0lEQVR4nO2cQZLaMBBFRSoX8ByBbLMjixyAHIFZJrvhCHAEOAKzS5bDEcIBsgi72Q5HwEeYlKfaUyoK7G7ZLUWt/6pUBYXBxv711VK3NHEAJOD067N/0teOK3jX6Ac8KJCYLqE6/3OIFaSkT6gtb8c1Yn2gN5w2HfmPSc49h6yCkNxjrfYyxh+Bs4JUcF215RViBdkAsYJsgFhBKqTTphOIFWQDxApSwnXXt+MgVpCaPsG+f/4Rjwp4fGoyoTFuyPT7s/+W5bBwVpANECvIBogVZEOpMWtT47Cg15sbxxydc3t6vY10XaCHkgpZVlRUEVKw8eQJPCdSPt8+dszrao4rJgxoRHYmFw19IAsS7G/n3Gzk6wMMShDrE7VqpN9rHP4vuTSIiGWxViQqra570xHvAgWsirWK1F2v4LDxsCrWXcS4ckODGKCMRbGuEozahwzcABNrYq0CuuU15cQnXlt6c6zc8yJ+VUaaFBhl4ZciD4JRfzPp/805V1/57JFaO13FYUEzBYf//B5liyVnlbjqqUOoPo273guuIffYNTRhcquNej8siXUhcNUlQ6gte3LZsa8BCLEkVm469hDQVUtqA3JMyWaBpUIWrli5LulzIoflCHF+6xx3f35I18r3cv76s5j9yqw460zQ/YYOgI6CawEKWBIrh6MgVr2EK/Ip4lYdrIiVK44h64u4zuqQINBBKtbLyfOhbTnSv+KKI9RVW7hih7MqUNpKgSgrNzMm2urWELAGSweEAQpArCAbsMlFREqaE9WgNGcdOvCJMesAbmBFrDFG6ZXg+0NnHcAVrIiVK44h2SXJoAnOqoAVsUpSoaHuyq09qOGsOlgSK1cgoZtlcF0ZxddKWBpgcUUSUsJXCb4nScsCAaWKVRq7StZ1hZQgAgaWxLoXhAI7Qew6F4j1gHhVD0tirQUrUme0CUafYOd0HBfsNqiItaTAVjiNdSbXvJyW8jdh4xKyXAYIsCbWU4C7ba6s6gzZ3nKsckdwA4vp1q1wg4oxWCMRoI/V2oBlxCmkLWLVOFgVa02bU2gL9pFcFUTActVVu+uK1qBnjTg1LtZLBGsSrGQHlj4at/6Crj8+pdSzNt31HbnhkKXY9yRUpFQTUGrl+owm/Ls2czt5qVO4aGqcc/8AyjkEvHp1mXUAAAAASUVORK5CYII="/>
 </svg>

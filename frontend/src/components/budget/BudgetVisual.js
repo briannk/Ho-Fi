@@ -24,7 +24,11 @@ const BudgetVisual = ({
 
       <BudgetLimit showState={showState} showDispatch={showDispatch} />
 
-      <Accordion>
+      <Accordion
+        className={`my-2 border-gray-700 border-opacity-10 ${
+          showState.showAccordion ? "border-b-2" : ""
+        }`}
+      >
         <Accordion.Title
           active={showState.showAccordion}
           onClick={() =>
@@ -33,18 +37,19 @@ const BudgetVisual = ({
               payload: showState.showAccordion,
             })
           }
-          className="flex items-center gap-2"
+          className="flex items-center p-4 border-none rounded text-lg gap-2 bg-gray-700 bg-opacity-10"
         >
-          Filters <Icon name="dropdown" />
+          Filters{" "}
+          <Icon name="dropdown" className="flex justify-center items-center" />
         </Accordion.Title>
         <Accordion.Content active={showState.showAccordion}>
-          {dataProp && Object.keys(filters).length && (
+          {dataProp && Object.keys(filters).length ? (
             <Checkboxes
               dataProp={dataProp}
               filters={filters}
               dispatch={dispatch}
             />
-          )}
+          ) : null}
         </Accordion.Content>
       </Accordion>
     </>

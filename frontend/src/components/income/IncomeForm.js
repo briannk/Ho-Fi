@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { Form } from "semantic-ui-react";
+import { Form, Icon } from "semantic-ui-react";
 import { useDataContext } from "../../contexts/DataContext";
 import { useMsgContext } from "../../contexts/MsgContext";
 
@@ -23,8 +23,7 @@ const IncomeForm = ({ dataProp }) => {
 
   const navigate = useNavigate();
 
-  const containerStyles = `container mx-auto max-w-sm border-4
-     rounded m-4 p-4`;
+  const containerStyles = `mx-auto max-w-md shadow-xl`;
 
   const handleClick = async () => {
     if (
@@ -65,9 +64,9 @@ const IncomeForm = ({ dataProp }) => {
         ...income,
         [name]: Math.round(Number(value) * 100) / 100,
       });
-    } else {
-      setIncome({ ...income, [name]: value });
+      return;
     }
+    setIncome({ ...income, [name]: value });
   };
 
   useEffect(() => {
@@ -78,8 +77,11 @@ const IncomeForm = ({ dataProp }) => {
 
   return (
     <div className={containerStyles}>
-      <h3>Fill out every field:</h3>
-      <Form className="my-4">
+      <div className="w-fit bg-gray-700 border-t rounded-t border-gray-700 px-8 pt-8 pb-6 tracking-wider flex justify-end items-center">
+        <Icon name="angle double up" size="big" className="text-expenses" />
+      </div>
+      <Form className="p-8">
+        <h3>Fill out every field:</h3>
         <Form.Input
           name="source"
           label="Source"

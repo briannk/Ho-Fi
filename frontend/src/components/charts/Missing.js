@@ -7,11 +7,11 @@ import missingImg from "../../assets/img/missing.gif";
 const Missing = ({ item }) => {
   return (
     <div
-      className="container mx-auto flex flex-col items-center gap-2 text-lg"
+      className="container mx-auto flex flex-col items-center gap-4 text-lg p-4"
       styles={{ border: `1em solid ${DEFAULT_THEMES["PRIMARY"]}` }}
     >
       <Image src={missingImg} />
-      <div className="w-full flex justify-center border-4 rounded-sm  p-4">
+      <div className="w-full flex justify-center border-4 rounded-sm p-4">
         <span>
           No data to display for these dates! You can fix that by
           <Link to={`/${item}/add`}> adding {item}!</Link>
