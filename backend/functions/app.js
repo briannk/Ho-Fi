@@ -1,5 +1,5 @@
 const express = require("express");
-const cors = require("cors")({ origin: true });
+const cors = require("cors");
 const { validateToken } = require("./controllers/auth");
 
 const app = express();
