@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer } from "react";
-import { Radio, Label } from "semantic-ui-react";
+import { Radio, Label, Icon } from "semantic-ui-react";
 import getTotal from "../../utilities/total";
 import FilterReducer from "./filter/FilterReducer";
 import BudgetVisual from "./BudgetVisual";
@@ -9,8 +9,7 @@ import isEmpty from "lodash.isempty";
 import { localToUTC } from "../../utilities/formatDate";
 import DateSelect from "../common/DateSelect";
 
-const containerStyles = `container mx-auto max-h-full border-4
-     rounded p-4 mx-1`;
+const containerStyles = `container mx-auto max-h-full shadow-xl`;
 
 function reducer(state = {}, { type, payload }) {
   switch (type) {
@@ -102,7 +101,6 @@ const Budgeting = () => {
 
   const updateData = () => {
     let _formattedData = [...expensesItems];
-    console.log(_formattedData, filters);
 
     for (const property in filters) {
       if (filters[property]["parent"]) {
@@ -123,7 +121,6 @@ const Budgeting = () => {
           );
         } else {
           _formattedData = _formattedData.filter((dataPoint) => {
-            console.log(filters[property][dataPoint[property]]);
             return filters[property][dataPoint[property]];
           });
         }
@@ -155,8 +152,13 @@ const Budgeting = () => {
 
   return (
     <div className={containerStyles}>
-      <h1>Budgeting</h1>
-      <div className="mx-auto flex flex-col p-4 gap-4">
+      <div className="w-fit bg-gray-700 border-t rounded-t border-gray-700 px-24 pt-8 pb-6 tracking-wider flex justify-end items-center gap-4">
+        <span className="text-white text-4xl filter drop-shadow-lg">
+          Budgeting
+        </span>
+        <Icon name="calculator" size="big" className="text-primary" />
+      </div>
+      <div className="mx-auto flex flex-col p-8 gap-4">
         <div className="flex flex-col lg:flex-row justify-between gap-4">
           <div className="w-full md:w-1/2 flex flex-col sm:flex-row justify-between gap-4">
             <div className="flex flex-col gap-2">

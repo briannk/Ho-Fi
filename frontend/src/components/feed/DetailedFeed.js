@@ -22,8 +22,8 @@ const DetailedFeed = ({ dataProp = {}, selectValue }) => {
     });
   };
   return (
-    <div className="flex flex-col px-4 gap-4">
-      <div className={`container flex flex-col mx-auto gap-y-2 overflow-auto`}>
+    <div className="flex flex-col my-4 p-8 gap-4 overflow-auto">
+      <div className={`container flex flex-col mx-auto gap-y-2`}>
         <Feed />
       </div>
       {dataProp.anchor && (

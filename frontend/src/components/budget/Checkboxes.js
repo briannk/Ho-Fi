@@ -32,7 +32,7 @@ const Checkboxes = ({ filters, dispatch }) => {
       return (
         <div className="flex flex-wrap sm:flex-nowrap justify-evenly content-center items-center m-4">
           <Checkbox
-            className="flex justify-evenly content-center items-center"
+            className="flex justify-evenly content-center items-center bg-gray-700/20"
             label={keyToText(key)}
             checked={filters[key]["parent"]}
             onClick={() =>

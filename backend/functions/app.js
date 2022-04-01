@@ -1,13 +1,17 @@
 const express = require("express");
-const cors = require("cors");
-// firestore stuff
-// const { initializeApp } = require("firebase-admin/app");
-// initializeApp();
+const cors = require("cors")({ origin: true });
 const { validateToken } = require("./controllers/auth");
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: "https://ho-fi-598a7.web.app",
+};
+
+app.use(cors(corsOptions));
+
+// toggle during development
+// app.use(cors);
 
 app.use(validateToken);
 

@@ -14,7 +14,6 @@ const getExpenses = async (req, res) => {
     let snapshot;
     let hasMore;
     let resultSet = [];
-    console.log(req.params);
 
     if (!isEmpty(req.body)) {
       queryParams = JSON.parse(req.body);
@@ -142,6 +141,7 @@ const getSomeExpenses = async (req, res) => {
   }
 };
 
+// used for testing
 const populateDB = (req, res) => {
   setExpenses(req, spendingData.data);
   res.status(200).send();
@@ -149,7 +149,6 @@ const populateDB = (req, res) => {
 
 const setExpense = async (req, res) => {
   const data = JSON.parse(req.body);
-  console.log("expense: ", data);
   try {
     let resp;
     if (!data.id) {

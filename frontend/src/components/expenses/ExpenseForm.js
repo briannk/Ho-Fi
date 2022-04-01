@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form } from "semantic-ui-react";
+import { Form, Icon } from "semantic-ui-react";
 import { useDataContext } from "../../contexts/DataContext";
 import { useMsgContext } from "../../contexts/MsgContext";
 import { useNavigate } from "react-router";
@@ -28,8 +28,7 @@ const ExpenseForm = ({ dataProp }) => {
     description: false,
   });
 
-  const containerStyles = `mx-auto max-w-sm border-4
-     rounded m-4 p-4`;
+  const containerStyles = `mx-auto max-w-md shadow-xl`;
 
   const handleClick = async () => {
     if (
@@ -72,9 +71,9 @@ const ExpenseForm = ({ dataProp }) => {
         ...expense,
         [name]: Math.round(Number(value) * 100) / 100,
       });
-    } else {
-      setExpense({ ...expense, [name]: value });
+      return;
     }
+    setExpense({ ...expense, [name]: value });
   };
 
   useEffect(() => {
@@ -85,9 +84,12 @@ const ExpenseForm = ({ dataProp }) => {
 
   return (
     <div className={containerStyles}>
+      <div className="w-fit bg-gray-700 border-t rounded-t border-gray-700 px-8 pt-8 pb-6 tracking-wider flex justify-end items-center">
+        <Icon name="angle double up" size="big" className="text-expenses" />
+      </div>
       {/* <ImgParser /> */}
-      <h3>Fill out every field:</h3>
-      <Form className="my-4">
+      <Form className="p-8">
+        <h3>Fill out every field:</h3>
         <Form.Input
           name="vendor"
           label="Vendor"

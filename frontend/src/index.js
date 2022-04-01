@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "semantic-ui-css/semantic.min.css";
+import "./stylesheets/semantic-overrides.css";
 
 import AuthProvider from "./contexts/AuthContext";
 import DataProvider from "./contexts/DataContext";

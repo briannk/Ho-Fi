@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Select } from "semantic-ui-react";
+import { Select, Icon } from "semantic-ui-react";
 import { useDataContext } from "../../contexts/DataContext";
 import keyToText from "../../utilities/keyToText";
 import DateSelect from "./DateSelect";
 import KEYS_TO_EXCLUDE from "../../constants/keysToExclude";
 import { localToUTC } from "../../utilities/formatDate";
 
-const containerStyles = `container 
-    p-4 mx-1`;
+const containerStyles = `container pb-8`;
 
 const Overview = ({ dataProp, selectValue, handleSelect }) => {
   const [sortOptions, setSortOptions] = useState([]);
@@ -41,8 +40,24 @@ const Overview = ({ dataProp, selectValue, handleSelect }) => {
       ) : (
         <>
           <div className={`${containerStyles}`}>
-            <h1 className="flex flex-col xl:flex-row gap-4 justify-between items-center">
-              {dataProp.of[0].toUpperCase() + dataProp.of.slice(1)}
+            <div className="w-fit bg-gray-700 border-t rounded-t border-gray-700 px-24 pt-8 pb-6 tracking-wider flex justify-end items-center gap-4">
+              <span className="text-white text-4xl filter drop-shadow-lg">
+                {dataProp.of[0].toUpperCase() + dataProp.of.slice(1)}
+              </span>
+              <Icon
+                name={`${
+                  dataProp.of === "expenses"
+                    ? "angle double up"
+                    : "angle double down"
+                }`}
+                size="big"
+                className={`${
+                  dataProp.of === "expenses" ? "text-expenses" : "text-income"
+                }`}
+              />
+            </div>
+            <div className="w-full flex justify-end items-center px-8 py-6">
+              {/* Change gradient color based on whether expense exceeds limit if it is set */}
 
               <DateSelect
                 dataProp={dataProp}
@@ -66,12 +81,13 @@ const Overview = ({ dataProp, selectValue, handleSelect }) => {
                   }
                 }}
               />
-            </h1>
-            <div className="flex-wrap sm:flex justify-between items-end my-2 ">
-              <span className="text-6xl font-bold text-green-300">
+            </div>
+
+            <div className="w-full flex flex-col gap-2 sm:gap-0 sm:flex-row justify-between px-8">
+              <span className="w-full md:flex justify-center md:justify-start text-6xl px-12 py-6 border-l rounded-l border-green-100 font-bold text-green-300 bg-gradient-to-r from-green-100">
                 ${dataProp.total.toFixed(2)}
               </span>
-              <div>
+              <div className="w-full flex justify-end items-center gap-2">
                 <span className="mx-2">Sort by:</span>
                 <Select
                   value={selectValue}

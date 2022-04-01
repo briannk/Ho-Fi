@@ -2,8 +2,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 5rem;
-  font-size: 1.5rem;
+  height: 6rem;
+  font-size: 1.75rem;
+  letter-spacing: 3px;
+  color: white;
+}
+
+.item.taller:hover {
+  background-color: rgba(var(--secondary-hover), 1) !important;
 }
 
 .ui.segment.noBorder,
@@ -23,11 +29,25 @@
   filter: brightness(1.1);
 }
 
-.toggleNav {
+button.ui.button.toggleNav {
   position: fixed;
   top: 1rem;
   right: 1rem;
-  z-index: 901;
+  z-index: 9001;
+  border: 2px solid rgba(var(--secondary), 1);
+  color: rgba(var(--secondary), 1);
+}
+
+button.ui.button.toggleNav.toggled {
+  border-color: white;
+  color: white;
+  background-color: transparent;
+}
+
+button.ui.button.toggleNav.toggled:hover {
+  border: 2px solid rgba(var(--secondary), 0.9);
+  background-color: white;
+  color: 2px solid rgba(var(--secondary), 0.9);
 }
 
 .pushable > .pusher.overflowVisible {
@@ -48,12 +68,39 @@
   border: none;
 }
 
+.ui.vertical.menu.navBar,
+.ui.menu.navBar {
+  background: rgba(var(--secondary), 0.98);
+}
+
 .ui.modal > .content.choices {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  background-color: rgba(var(--secondary), 0.9);
+}
+
+.navBar button.ui.button {
+  border-color: white;
+  color: white;
 }
 
 .ui.modal > .content.choices > .ui.button {
+  margin: 0;
+  border: 2px solid rgba(var(--secondary), 1);
+  background-color: transparent;
+  font-weight: lighter;
   font-size: 1.5rem;
+  color: white;
+  border-color: white;
+}
+
+.ui.modal > .content.choices > .ui.button:hover {
+  font-weight: bold;
+  background-color: rgba(var(--secondary-hover), 1);
+  border-color: rgba(var(--secondary-hover), 1);
+}
+
+.ui.segment {
+  box-shadow: none !important;
 }

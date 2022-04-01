@@ -8,6 +8,8 @@ import cloneDeep from "lodash.clonedeep";
 import getCurrentDateRange from "../utilities/getCurrentDateRange";
 
 const apiURL = "https://us-central1-ho-fi-598a7.cloudfunctions.net/app";
+// url for development
+// const apiURL = "http://localhost:5001/ho-fi-598a7/us-central1/app";
 
 const DataContext = React.createContext();
 
@@ -40,14 +42,14 @@ const DataProvider = ({ children }) => {
   const [colorTable, setColorTable] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [expensesGroup, setExpensesGroup] = useState("category");
-  const [incomeGroup, setIncomeGroup] = useState("source");
+  const [expensesGroup, setExpensesGroup] = useState("transactionDate");
+  const [incomeGroup, setIncomeGroup] = useState("payDate");
 
   const { getToken } = useAuthContext();
 
   const getExpenses = async (
     dateRange,
-    group = "category",
+    group = "transactionDate",
     getAll = false,
     isNew = true
   ) => {
@@ -138,7 +140,7 @@ const DataProvider = ({ children }) => {
 
   const getIncome = async (
     dateRange,
-    group = "source",
+    group = "payDate",
     getAll = false,
     isNew = true
   ) => {
@@ -356,6 +358,15 @@ const DataProvider = ({ children }) => {
   useEffect(() => {
     const dateRange = getCurrentDateRange();
     async function initializeData() {
+      // function to load mock data during development
+      //
+      // const token = await getToken();
+      // await fetch(`${apiURL}/api/v1/expenses/test`, {
+      //   method: "GET",
+      //   headers: {
+      //     Authorization: "Bearer " + token,
+      //   },
+      // });
       await getExpenses(dateRange);
       await getIncome(dateRange);
       await getBudget();
